@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "items": [
+    { "id": "pet-fox", "name": "小狐狸", "kind": "pet", "emoji": "🦊", "image": "img/island/pets/fox.png" },
+    { "id": "pet-panda", "name": "大熊猫", "kind": "pet", "emoji": "🐼", "image": "img/island/pets/panda.png" },
+    { "id": "pet-penguin", "name": "小企鹅", "kind": "pet", "emoji": "🐧", "image": "img/island/pets/penguin.png" },
+    { "id": "pet-rabbit", "name": "小白兔", "kind": "pet", "emoji": "🐰", "image": "img/island/pets/rabbit.png" },
+    { "id": "pet-tiger", "name": "小老虎", "kind": "pet", "emoji": "🐯", "image": "img/island/pets/tiger.png" },
+    { "id": "pet-dragon", "name": "小龙", "kind": "pet", "emoji": "🐲", "image": "img/island/pets/dragon.png" },
+    { "id": "deco-lighthouse", "name": "灯塔", "kind": "decoration", "image": "img/island/decorations/lighthouse.png" },
+    { "id": "deco-treehouse", "name": "树屋", "kind": "decoration", "emoji": "🏡", "image": "img/island/decorations/treehouse.png" },
+    { "id": "deco-fountain", "name": "喷泉", "kind": "decoration", "emoji": "⛲", "image": "img/island/decorations/fountain.png" },
+    { "id": "deco-rainbow-bridge", "name": "彩虹桥", "kind": "decoration", "emoji": "🌈", "image": "img/island/decorations/rainbow-bridge.png" },
+    { "id": "deco-flower-garden", "name": "花园", "kind": "decoration", "emoji": "🌷", "image": "img/island/decorations/flower-garden.png" },
+    { "id": "deco-castle", "name": "城堡", "kind": "decoration", "emoji": "🏰", "image": "img/island/decorations/castle.png" }
+  ]
+}

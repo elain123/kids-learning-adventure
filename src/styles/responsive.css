@@ -1,0 +1,272 @@
+/* ==========================================================================
+   全局响应式基础样式（趣味学习冒险）
+
+   契约（Validates: Requirements 11.2, 11.3, 11.4, 11.5, 12.2）：
+   - Req 11.2：屏幕宽度 ≥320px 时，首页 / 练习 / 结算（小组结算在练习页内渲染）
+     等页面不出现横向滚动条 —— 全局 border-box + html/body/#app overflow-x 防护
+     + 媒体元素 max-width:100% 守卫；
+   - Req 11.3：答题控件（ChoicePad / DragMatch / NumericKeypad / WordCard /
+     DictationCard）完整展示在可视区域内，无需横向滚动即可点选与拖拽 ——
+     各组件根元素 width:100% + max-width 上限，经本文件的盒模型与断点规则
+     保证 320px 起不溢出；
+   - Req 11.4：触摸与鼠标均可完成全部交互 —— 交互元素统一
+     touch-action: manipulation（消除双击缩放延迟），拖拽组件（DragMatch）
+     在其 scoped 样式中以 touch-action:none + Pointer Events 接管，优先级更高，
+     不受本文件全局默认影响；
+   - Req 11.5：旋转屏幕 / 改变窗口大小仅触发 CSS 重排 —— 全部布局自适应由
+     本文件与各组件的媒体查询承担，不注册任何 resize/orientationchange
+     处理器，练习进度与答题状态保存在 Vue refs 与 Local_Store 中，与视口无关；
+   - Req 12.2：触控区域 ≥44×44px —— 各组件 scoped 样式已保证，本文件不缩小
+     任何既有触控尺寸（横屏紧凑模式只压缩装饰与留白）。
+
+   选择器优先级说明：组件 scoped 样式为 `.class[data-v-hash]`（0,2,0）。
+   本文件中需要覆盖组件 / 页面 scoped 规则的地方统一使用 `#app` 前缀
+   （1,1,0），保证全局响应式规则稳定生效；不覆盖的地方保持元素选择器
+   或裸 class，确保 scoped 样式优先。
+   ========================================================================== */
+
+/* ---------- 1. 盒模型与文档根：320px 起无横向滚动（Req 11.2） ---------- */
+
+*,
+*::before,
+*::after {
+  /* 统一 border-box：修复 width:100% + padding/border 组合的溢出
+     （如 WordCard max-width:360px 展示卡、首页 banner、学科页 progress-card） */
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* 兜底：任何子元素意外超宽都不产生横向滚动条（Req 11.2） */
+  overflow-x: hidden;
+  /* 禁止横向 overscroll 链式滑动（拖拽答题时手感更稳定） */
+  overscroll-behavior-x: none;
+}
+
+body {
+  /* 需求基线：支持 320px 及以上宽度（Req 11.2） */
+  min-width: 320px;
+  /* 长词 / 长串自动折行，避免撑破布局 */
+  overflow-wrap: break-word;
+  /* iOS 横竖屏切换时保持文字大小不自作主张缩放 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+#app {
+  width: 100%;
+  max-width: 100%;
+  /* 应用根节点横向溢出兜底（与 html/body 双保险，Req 11.2） */
+  overflow-x: hidden;
+}
+
+/* ---------- 2. 媒体元素：永不超出容器（Req 11.2 / 11.3） ---------- */
+
+img,
+video,
+canvas,
+audio,
+svg {
+  max-width: 100%;
+}
+
+img,
+video {
+  /* 保持宽高比；组件显式设置 width/height 的 scoped 规则优先级更高 */
+  height: auto;
+}
+
+/* ---------- 3. 触摸默认行为（Req 11.4） ---------- */
+
+button,
+[role='button'],
+a,
+input,
+select,
+textarea,
+label {
+  /* 触摸端直接派发 click，消除 300ms 双击缩放延迟；
+     DragMatch 的 .chip / .slot 以 scoped 的 touch-action:none 接管拖拽，不受影响 */
+  touch-action: manipulation;
+}
+
+/* ---------- 4. 流式容器工具类 ---------- */
+
+.fluid-container {
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+/* ---------- 5. 刘海屏安全区（Req 11.3：控件完整可视） ---------- */
+
+:root {
+  /* env() 在不支持的浏览器回退为 0px；需要 index.html 的
+     viewport-fit=cover 才会在刘海屏设备上取到非零值 */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+/* 页面根级安全区与横向溢出防护。
+   各页面既有水平 padding 均为 16px，用 max(16px, safe-area) 保持只增不减；
+   首页自身无水平 padding（背景层 absolute 满幅），仅叠加安全区；
+   练习页（含小组结算）由 task 13.3 实现，按 16px 约定兜底并叠加安全区。 */
+#app .subject-page,
+#app .box-page,
+#app .island-page {
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
+}
+
+#app .subject-page {
+  padding-bottom: max(48px, var(--safe-bottom));
+}
+
+#app .box-page,
+#app .island-page {
+  padding-bottom: max(32px, var(--safe-bottom));
+}
+
+#app .home-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  padding-top: var(--safe-top);
+}
+
+#app .practice-page {
+  width: 100%;
+  max-width: 100%;
+  /* 练习页（含小组结算画面）横向滚动防护（Req 11.2） */
+  overflow-x: hidden;
+  /* 安全区：下限取全项目页面统一的 16px 约定，竖屏普通设备为无操作，
+     刘海屏横屏时自动撑开避开刘海（Req 11.3）；不触碰练习页内部布局 */
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
+  padding-bottom: max(16px, var(--safe-bottom));
+}
+
+/* ---------- 6. 响应式断点 ---------- */
+
+/* 紧凑档：≤480px（覆盖 320px 基线，Req 11.2 / 11.3） */
+@media (max-width: 480px) {
+  .fluid-container {
+    padding-inline: 12px;
+  }
+
+  /* 页面顶部留白收紧，纵向空间留给答题控件 */
+  #app .subject-page,
+  #app .box-page,
+  #app .island-page {
+    padding-top: 12px;
+  }
+}
+
+/* 超窄档：≤360px（320-360px 设备进一步收紧装饰留白） */
+@media (max-width: 360px) {
+  #app .home-page__content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* 中屏档：481-768px（平板竖屏） */
+@media (min-width: 481px) and (max-width: 768px) {
+  .fluid-container {
+    max-width: 640px;
+  }
+}
+
+/* 桌面档：≥769px（内容居中限宽，背景层满幅，不产生横向滚动） */
+@media (min-width: 769px) {
+  .fluid-container {
+    max-width: 960px;
+  }
+}
+
+/* ---------- 7. 横竖屏自适应（Req 11.5） ---------- */
+
+/* 手机横屏（高度受限）：压缩纵向留白与纯装饰元素，
+   保证答题控件与主按钮完整落在可视区域内（Req 11.3）。
+   只调整布局尺寸与装饰显隐，不触碰任何状态 —— 练习进度与答题状态
+   保存在 Vue refs / Local_Store，与视口变化无关（Req 11.5）。 */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* 首页：压缩间距，主按钮变矮但保持 ≥44×44px 触控（Req 12.2） */
+  #app .home-page__content {
+    gap: 12px;
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+
+  #app .home-page__title {
+    margin-top: 0;
+    font-size: 24px;
+  }
+
+  #app .adventure-button {
+    min-height: 88px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  #app .adventure-button__icon {
+    font-size: 36px;
+  }
+
+  /* 学科页：吉祥物缩小、隐藏漂浮装饰，进度卡与大按钮优先可见 */
+  #app .hero {
+    padding-top: 8px;
+  }
+
+  #app .mascot {
+    font-size: 56px;
+  }
+
+  #app .deco {
+    display: none;
+  }
+
+  #app .subject-name {
+    font-size: 28px;
+  }
+
+  #app .slogan {
+    margin-bottom: 12px;
+  }
+
+  #app .progress-card {
+    margin-bottom: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* 宝箱页：舞台与宝箱缩小，开启按钮保持在首屏 */
+  #app .box-stage {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  #app .chest-emoji {
+    font-size: 72px;
+  }
+
+  /* 小岛页：天空装饰让位给收集卡网格 */
+  #app .island-scene {
+    padding-top: 12px;
+  }
+
+  #app .sky-decor {
+    display: none;
+  }
+}
+
+/* 竖屏：无需特殊处理 —— 各页面/组件的流式布局与上方断点已覆盖；
+   横竖屏切换仅是视口尺寸变化，由上述媒体查询自动重排（Req 11.5）。 */

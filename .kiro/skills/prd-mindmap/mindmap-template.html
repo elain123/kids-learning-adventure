@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{TITLE}} - 思维导图</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+    #toolbar {
+      position: fixed; top: 12px; left: 12px; z-index: 10;
+      background: rgba(255,255,255,0.9); padding: 8px 14px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12); font-size: 13px; color: #333;
+    }
+    #toolbar b { color: #1a73e8; }
+    svg.markmap { display: block; width: 100vw; height: 100vh; }
+  </style>
+  <!-- Markmap autoloader: 打开即自动渲染下方 template 中的大纲 -->
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18"></script>
+</head>
+<body>
+  <div id="toolbar">思维导图：<b>{{TITLE}}</b> · 滚轮缩放 / 拖拽平移 / 点击节点折叠</div>
+  <div class="markmap">
+    <script type="text/template">
+{{MINDMAP_CONTENT}}
+    </script>
+  </div>
+</body>
+</html>

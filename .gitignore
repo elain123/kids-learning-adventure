@@ -1,0 +1,14 @@
+# 依赖与构建产物
+node_modules/
+dist/
+
+# 日志与临时输出
+*.log
+
+# Python 缓存（音频生成脚本）
+__pycache__/
+scripts/.cache/
+
+# 系统文件
+.DS_Store
+Thumbs.db

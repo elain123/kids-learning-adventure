@@ -1,0 +1,13 @@
+{
+  "language": "zh-CN",
+  "output_language": "chinese",
+  "description": "全局配置文件 - 设置AI助手使用中文进行所有回复和输出",
+  "created_at": "2026-04-27",
+  "settings": {
+    "response_language": "中文",
+    "interface_language": "中文",
+    "documentation_language": "中文",
+    "code_comments_language": "中文"
+  },
+  "notes": "此配置确保AI助手在所有交互中使用中文回复"
+}

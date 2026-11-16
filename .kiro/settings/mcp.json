@@ -1,0 +1,19 @@
+{
+  "autoApprove": [
+    "executePwsh",
+    "controlPwshProcess",
+    "getProcessOutput",
+    "listProcesses",
+    "fsWrite",
+    "fsAppend",
+    "strReplace",
+    "deleteFile",
+    "readFile",
+    "readMultipleFiles",
+    "listDirectory",
+    "grepSearch",
+    "fileSearch"
+  ],
+  "mcpServers": {
+  }
+}

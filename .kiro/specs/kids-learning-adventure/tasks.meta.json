@@ -1,0 +1,1013 @@
+{
+  "pbtResults": {
+    "4.2 编写属性测试：间隔状态机": {
+      "status": "passed",
+      "lastRunTimestamp": 1794369214869
+    },
+    "2.2 编写属性测试：题库校验过滤与整体损坏": {
+      "status": "passed",
+      "lastRunTimestamp": 1794372760123
+    },
+    "3.2 编写属性测试：读写往返、多账号隔离与损坏自愈": {
+      "status": "passed",
+      "lastRunTimestamp": 1794372760520
+    },
+    "5.2 编写属性测试：口算生成器产出合法且答案正确": {
+      "status": "passed",
+      "lastRunTimestamp": 1794381582790
+    },
+    "9.2 编写属性测试：判定与标准答案一致": {
+      "status": "passed",
+      "lastRunTimestamp": 1794373106321
+    },
+    "9.4 编写属性测试：单词卡选项构造": {
+      "status": "passed",
+      "lastRunTimestamp": 1794373137653
+    },
+    "4.4 编写属性测试：今日队列": {
+      "status": "passed",
+      "lastRunTimestamp": 1794374981466
+    },
+    "7.2 编写属性测试：会话定位、分组与持久化往返": {
+      "status": "passed",
+      "lastRunTimestamp": 1794379080818
+    },
+    "7.6 编写属性测试：历史最佳纪录更新": {
+      "status": "passed",
+      "lastRunTimestamp": 1794381584646
+    },
+    "8.2 编写属性测试：宝箱守恒与余额不足": {
+      "status": "passed",
+      "lastRunTimestamp": 1794381585865
+    },
+    "7.4 编写属性测试：作答计数转移、星星规则与难度调节": {
+      "status": "passed",
+      "lastRunTimestamp": 1794388857090
+    }
+  },
+  "executionHistory": {
+    "1.1 初始化 Vue 3 + Vite + TypeScript 工程与测试框架": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142438
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367152336
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367636253
+      }
+    ],
+    "1.2 定义核心类型与常量": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142526
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367640522
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368427913
+      }
+    ],
+    "2.1 实现题库加载、逐题校验与索引": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142612
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368437138
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368823310
+      }
+    ],
+    "2.2 编写属性测试：题库校验过滤与整体损坏": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142711
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369108885
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369159399
+      }
+    ],
+    "3.1 实现命名空间读写、损坏备份自愈与写失败上报": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142772
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368438374
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368824450
+      }
+    ],
+    "3.2 编写属性测试：读写往返、多账号隔离与损坏自愈": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142836
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369109298
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369155863
+      }
+    ],
+    "4.1 实现间隔状态机 applyAnswer": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142914
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368438604
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368825888
+      }
+    ],
+    "4.2 编写属性测试：间隔状态机": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367142970
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369109478
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369156460
+      }
+    ],
+    "4.3 实现今日队列生成 buildTodayQueue": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143054
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369109857
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369157315
+      }
+    ],
+    "4.4 编写属性测试：今日队列": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143115
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373267125
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375624088
+      }
+    ],
+    "5.1 实现 generateOralQuestion": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143195
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368438810
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368826891
+      }
+    ],
+    "5.2 编写属性测试：口算生成器产出合法且答案正确": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143282
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369110002
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369158096
+      }
+    ],
+    "6. Checkpoint - 数据层与引擎基础完成": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143353
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375639217
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381703234
+      }
+    ],
+    "7.1 实现会话编排：三题分组、nextUnanswered、会话序列化": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143419
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373268564
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375625479
+      }
+    ],
+    "7.2 编写属性测试：会话定位、分组与持久化往返": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143482
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375640432
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381703779
+      }
+    ],
+    "7.3 实现作答流程：首答/重试、连胜连错、难度下调、星星发放": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143567
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375641246
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381707058
+      }
+    ],
+    "7.4 编写属性测试：作答计数转移、星星规则与难度调节": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143651
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381721306
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389102287
+      }
+    ],
+    "7.5 实现关卡计时与口算历史最佳纪录": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143735
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373270116
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375626083
+      }
+    ],
+    "7.6 编写属性测试：历史最佳纪录更新": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143799
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375642465
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381707880
+      }
+    ],
+    "8.1 实现宝箱开启 openTreasureBox": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143854
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373270824
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375627547
+      }
+    ],
+    "8.2 编写属性测试：宝箱守恒与余额不足": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367143933
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375644311
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381710878
+      }
+    ],
+    "9.1 实现作答判定服务": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144018
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368439023
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368829052
+      }
+    ],
+    "9.2 编写属性测试：判定与标准答案一致": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144130
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369160000
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373257237
+      }
+    ],
+    "9.3 实现单词卡 4 选项构造器": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144198
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368830596
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369108447
+      }
+    ],
+    "9.4 编写属性测试：单词卡选项构造": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144256
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369160853
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373258212
+      }
+    ],
+    "10. Checkpoint - 引擎层全部完成": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144342
+      },
+      {
+        "executionId": "1ec715de-c3dd-4f45-8869-fbe23e64e180",
+        "chatSessionId": "sess_9160e4e4-6fc7-4cab-99ce-9546c7ca2ebb",
+        "timestamp": 1794794656436
+      },
+      {
+        "executionId": "1ec715de-c3dd-4f45-8869-fbe23e64e180",
+        "chatSessionId": "sess_9160e4e4-6fc7-4cab-99ce-9546c7ca2ebb",
+        "timestamp": 1794795102755
+      }
+    ],
+    "11.1 实现 Audio_Service（Web Audio 音效、读音播放、失败降级）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144427
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368831299
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369108640
+      }
+    ],
+    "11.2 实现音效开关与答题反馈编排": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144499
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373272046
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375627855
+      }
+    ],
+    "11.3 编写单元测试：音频失败降级、开关行为与反馈时序": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144593
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375644946
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389101752
+      }
+    ],
+    "12.1 实现 ChoicePad 点选组件": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144662
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381721695
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389103116
+      }
+    ],
+    "12.2 实现 DragMatch 拖拽组件": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144745
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381722324
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389103921
+      }
+    ],
+    "12.3 实现 NumericKeypad 数字键盘组件": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144801
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381722612
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389104737
+      }
+    ],
+    "12.4 实现 WordCard 单词卡组件": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144879
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389105355
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390127858
+      }
+    ],
+    "12.5 实现 DictationCard 听写卡组件": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367144959
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389106082
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390129160
+      }
+    ],
+    "12.6 编写组件单元测试": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145078
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390135635
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466846456
+      }
+    ],
+    "13.1 实现首页地图页": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145135
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390136397
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466847407
+      }
+    ],
+    "13.2 实现学科入口页": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145193
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390136816
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466848624
+      }
+    ],
+    "13.3 实现练习页与小组/关卡结算弹层": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145265
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466851688
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794533524930
+      }
+    ],
+    "13.4 实现宝箱页": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145334
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390137025
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466849652
+      }
+    ],
+    "13.5 实现小岛展示页": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145415
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794390137329
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466850674
+      }
+    ],
+    "13.6 编写页面单元测试": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145483
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794533534153
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794552817321
+      }
+    ],
+    "14.1 编写语文种子题（人教版三四年级七类题型）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145560
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367640918
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368429171
+      }
+    ],
+    "14.2 编写数学种子题与口算生成器参数（三四年级全部单元、六类题型）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145620
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367641288
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368429569
+      }
+    ],
+    "14.3 编写英语单词卡种子与 12 件收集品清单": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145693
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367641538
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368429685
+      }
+    ],
+    "14.4 编写种子数据契约测试": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145766
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369161064
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373258734
+      }
+    ],
+    "15.1 实现响应式布局与横竖屏自适应": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145858
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466852543
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794533525278
+      }
+    ],
+    "15.2 编写布局适配测试": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145933
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794533534772
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794552817886
+      }
+    ],
+    "16.1 编写端到端主链路集成测试": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367145998
+      },
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794552818137
+      },
+      {
+        "executionId": "c731f13f-a0e7-4704-af5a-151afe7c6ceb",
+        "chatSessionId": "sess_c5f31997-a560-416c-8815-3e3de0775b42",
+        "timestamp": 1794792319251
+      },
+      {
+        "executionId": "c731f13f-a0e7-4704-af5a-151afe7c6ceb",
+        "chatSessionId": "sess_c5f31997-a560-416c-8815-3e3de0775b42",
+        "timestamp": 1794793607096
+      }
+    ],
+    "16.2 编写断网冒烟与写失败提示测试": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367146082
+      },
+      {
+        "executionId": "c731f13f-a0e7-4704-af5a-151afe7c6ceb",
+        "chatSessionId": "sess_c5f31997-a560-416c-8815-3e3de0775b42",
+        "timestamp": 1794793610898
+      },
+      {
+        "executionId": "c731f13f-a0e7-4704-af5a-151afe7c6ceb",
+        "chatSessionId": "sess_c5f31997-a560-416c-8815-3e3de0775b42",
+        "timestamp": 1794794242114
+      },
+      {
+        "executionId": "6eb6f388-6809-4224-a755-82772359bbf4",
+        "chatSessionId": "sess_ad2dd817-0c00-4f84-8ad8-b0780113462a",
+        "timestamp": 1794794275009
+      },
+      {
+        "executionId": "6eb6f388-6809-4224-a755-82772359bbf4",
+        "chatSessionId": "sess_ad2dd817-0c00-4f84-8ad8-b0780113462a",
+        "timestamp": 1794794419104
+      }
+    ],
+    "17. Final checkpoint - 全部测试通过": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794367146153
+      },
+      {
+        "executionId": "c22a18bf-dd28-4aed-8f6f-1ffdfcba5cad",
+        "chatSessionId": "sess_d0650357-1aa8-4ddb-a0d7-671a7b98f73b",
+        "timestamp": 1794794451594
+      },
+      {
+        "executionId": "c22a18bf-dd28-4aed-8f6f-1ffdfcba5cad",
+        "chatSessionId": "sess_d0650357-1aa8-4ddb-a0d7-671a7b98f73b",
+        "timestamp": 1794794631834
+      }
+    ],
+    "1. 项目脚手架与核心类型定义": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794368428022
+      }
+    ],
+    "3. Local_Store 本地存储适配器": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369155935
+      }
+    ],
+    "5. 数学口算生成器（Math_Generator）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369158199
+      }
+    ],
+    "2. 题库加载与校验（Question_Bank）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794369159463
+      }
+    ],
+    "9. 作答判定与单词卡选项构造": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373258303
+      }
+    ],
+    "14. 种子题库内容": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794373258802
+      }
+    ],
+    "4. 复习引擎（Review_Engine）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794375624199
+      }
+    ],
+    "8. 星星钱包与宝箱": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794381710994
+      }
+    ],
+    "11. Audio_Service 与视听反馈": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389101855
+      }
+    ],
+    "7. 冒险引擎（Adventure_Engine）": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794389102363
+      }
+    ],
+    "12. 题型交互组件": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794466846550
+      }
+    ],
+    "13. 页面与路由": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794552817422
+      }
+    ],
+    "15. 响应式与多端适配": [
+      {
+        "executionId": "741e20dc-b6c7-4022-954b-53f07cf26445",
+        "chatSessionId": "sess_57ad8cba-c5ad-4d23-8644-f6a1c8dcd747",
+        "timestamp": 1794552818035
+      }
+    ],
+    "16. 集成与冒烟测试": [
+      {
+        "executionId": "c731f13f-a0e7-4704-af5a-151afe7c6ceb",
+        "chatSessionId": "sess_c5f31997-a560-416c-8815-3e3de0775b42",
+        "timestamp": 1794794242183
+      }
+    ]
+  }
+}

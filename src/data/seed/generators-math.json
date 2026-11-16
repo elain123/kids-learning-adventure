@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "generators": [
+    {
+      "id": "gen-math-g3-add-within10000",
+      "knowledgePointId": "math.g3.add.within10000",
+      "grade": 3,
+      "difficulty": 2,
+      "template": "{a} + {b} = ?",
+      "operands": {
+        "a": { "min": 100, "max": 9999, "integer": true },
+        "b": { "min": 100, "max": 9999, "integer": true }
+      },
+      "operation": "add",
+      "constraints": {
+        "resultMin": 200,
+        "resultMax": 19998,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g3-sub-within10000",
+      "knowledgePointId": "math.g3.sub.within10000",
+      "grade": 3,
+      "difficulty": 2,
+      "template": "{a} - {b} = ?",
+      "operands": {
+        "a": { "min": 100, "max": 9999, "integer": true },
+        "b": { "min": 10, "max": 9999, "integer": true }
+      },
+      "operation": "sub",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 9989,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g3-mul-multi-1digit",
+      "knowledgePointId": "math.g3.mul.multi1",
+      "grade": 3,
+      "difficulty": 3,
+      "template": "{a} × {b} = ?",
+      "operands": {
+        "a": { "min": 12, "max": 999, "integer": true },
+        "b": { "min": 2, "max": 9, "integer": true }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 24,
+        "resultMax": 8991,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g3-div-1digit",
+      "knowledgePointId": "math.g3.div.1digit",
+      "grade": 3,
+      "difficulty": 3,
+      "template": "{a} ÷ {b} = ?",
+      "operands": {
+        "a": { "min": 10, "max": 999, "integer": true },
+        "b": { "min": 2, "max": 9, "integer": true }
+      },
+      "operation": "div",
+      "constraints": {
+        "resultMin": 2,
+        "resultMax": 499,
+        "divisible": true,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g3-mul-2digit",
+      "knowledgePointId": "math.g3.mul.2digit",
+      "grade": 3,
+      "difficulty": 3,
+      "template": "{a} × {b} = ?",
+      "operands": {
+        "a": { "min": 10, "max": 99, "integer": true },
+        "b": { "min": 10, "max": 99, "integer": true }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 100,
+        "resultMax": 9801,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g4-mul-3digit-2digit",
+      "knowledgePointId": "math.g4.mul.3x2",
+      "grade": 4,
+      "difficulty": 4,
+      "template": "{a} × {b} = ?",
+      "operands": {
+        "a": { "min": 100, "max": 999, "integer": true },
+        "b": { "min": 10, "max": 99, "integer": true }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 1000,
+        "resultMax": 98901,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g4-div-2digit",
+      "knowledgePointId": "math.g4.div.2digit",
+      "grade": 4,
+      "difficulty": 4,
+      "template": "{a} ÷ {b} = ?",
+      "operands": {
+        "a": { "min": 100, "max": 9999, "integer": true },
+        "b": { "min": 11, "max": 99, "integer": true }
+      },
+      "operation": "div",
+      "constraints": {
+        "resultMin": 2,
+        "resultMax": 908,
+        "divisible": true,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g4-decimal-add",
+      "knowledgePointId": "math.g4.decimal.add",
+      "grade": 4,
+      "difficulty": 3,
+      "template": "{a} + {b} = ?",
+      "operands": {
+        "a": { "min": 0.1, "max": 99.9, "integer": false },
+        "b": { "min": 0.1, "max": 99.9, "integer": false }
+      },
+      "operation": "add",
+      "constraints": {
+        "resultMin": 0.2,
+        "resultMax": 199.8,
+        "divisible": false,
+        "decimalPlaces": 2
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g4-decimal-sub",
+      "knowledgePointId": "math.g4.decimal.sub",
+      "grade": 4,
+      "difficulty": 3,
+      "template": "{a} - {b} = ?",
+      "operands": {
+        "a": { "min": 0.1, "max": 99.9, "integer": false },
+        "b": { "min": 0.1, "max": 99.9, "integer": false }
+      },
+      "operation": "sub",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 99.8,
+        "divisible": false,
+        "decimalPlaces": 2
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g4-mixed-ops",
+      "knowledgePointId": "math.g4.arithmetic.mixed",
+      "grade": 4,
+      "difficulty": 3,
+      "template": "{a} {op} {b} = ?",
+      "operands": {
+        "a": { "min": 10, "max": 500, "integer": true },
+        "b": { "min": 2, "max": 99, "integer": true }
+      },
+      "operation": "mixed",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 49500,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    }
+  ]
+}
