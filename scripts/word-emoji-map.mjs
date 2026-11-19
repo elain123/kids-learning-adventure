@@ -33,4 +33,21 @@ export const WORD_EMOJI = {
   water: '💧', week: '🗓️', win: '🏆', wind: '🌬️', window: '🪟',
   windy: '💨', winter: '🌨️', year: '📆', yellow: '🟨', young: '🧒',
   zoo: '🦓',
+
+  // ---- G5 新增词 ----
+  airport: '🛫', blind: '🦯', bored: '🥱', borrow: '🤲', bought: '💸',
+  breakfast: '🥞', change: '🔄', crayon: '🖍️', email: '📧', feeling: '💭',
+  goalkeeper: '🥅', guidedog: '🦮', heavy: '🏋️', laugh: '😂', library: '🏛️',
+  light: '💡', museum: '🖼️', nineteen: '🧮', pen: '🖊️', pencil: '✏️',
+  photo: '📷', ruler: '📐', sausage: '🥓', send: '📤', shopping: '🛍️',
+  travel: '🧳', wear: '👔', wheel: '🛞', yesterday: '🔙',
+
+  // ---- G6 新增词 ----
+  balloon: '🎈', bamboo: '🎍', baseball: '⚾', birds: '🐦', book: '📕',
+  chinatown: '🏮', chopsticks: '🥢', coin: '🪙', cola: '🥤', doll: '🪆',
+  dollar: '💵', favourite: '❤️', greatwall: '🧱', hamburger: '🍔', hobby: '🎸',
+  hotdog: '🌭', kilometre: '🗺️', kite: '🪁', letter: '✉️', penfriend: '🤝',
+  picnic: '🧺', present: '🎁', restaurant: '🍴', sandwich: '🥪', september: '9️⃣',
+  shine: '✨', space: '🌌', spaceship: '🛸', stamp: '📮', suona: '🎺',
+  thanksgiving: '🦃', thousand: '💰', wish: '🌠', wishes: '🎋',
 };

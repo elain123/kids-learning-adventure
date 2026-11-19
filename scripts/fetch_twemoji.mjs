@@ -9,7 +9,11 @@ import { fileURLToPath } from 'node:url';
 import { WORD_EMOJI } from './word-emoji-map.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SEED = join(ROOT, 'src/data/seed/questions-english.json');
+const SEEDS = [
+  'src/data/seed/questions-english.json',
+  'src/data/seed/questions-english-g5.json',
+  'src/data/seed/questions-english-g6.json',
+];
 const CDN = 'https://testingcf.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg';
 const CONCURRENCY = 6;
 const MAX_RETRY = 3;
@@ -40,12 +44,14 @@ async function download(code, attempt = 1) {
 }
 
 // ---- 收集全部图片路径（media.image + 选项 image，.svg） ----
-const bank = JSON.parse(readFileSync(SEED, 'utf-8'));
 const paths = new Set();
-for (const q of bank.questions) {
-  if (q.media?.image) paths.add(q.media.image);
-  for (const o of q.options ?? []) {
-    if (o.image) paths.add(o.image);
+for (const seed of SEEDS) {
+  const bank = JSON.parse(readFileSync(join(ROOT, seed), 'utf-8'));
+  for (const q of bank.questions) {
+    if (q.media?.image) paths.add(q.media.image);
+    for (const o of q.options ?? []) {
+      if (o.image) paths.add(o.image);
+    }
   }
 }
 
