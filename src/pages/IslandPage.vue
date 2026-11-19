@@ -11,6 +11,21 @@
       </div>
     </header>
 
+    <!-- 错题集入口（Req 5.1）：徽标展示未掌握错题数量（0 时显示 0），点击导航 /island/wrong -->
+    <RouterLink
+      to="/island/wrong"
+      class="wrong-set-entry"
+      data-testid="wrong-set-entry"
+      aria-label="打开错题集"
+    >
+      <span class="wrong-set-icon" aria-hidden="true">📖</span>
+      <span class="wrong-set-label">错题集</span>
+      <span class="wrong-set-badge" data-testid="wrong-set-badge" aria-live="polite">
+        {{ wrongUnmasteredCount }}
+      </span>
+      <span class="wrong-set-arrow" aria-hidden="true">›</span>
+    </RouterLink>
+
     <!-- 收集进度条 -->
     <div class="progress-track" role="progressbar" :aria-valuenow="collectedCount" :aria-valuemax="COLLECTIBLE_TOTAL">
       <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
@@ -80,8 +95,16 @@
  * 并展示已收集数量与可收集总数（"已收集 N/12"，N = collection.items.length，
  * 总数 = COLLECTIBLE_TOTAL）。
  *
+ * _Requirements: multi-grade-mistake-book 5.1、5.7_（本规格改造）：
+ * - 顶部新增"📖 错题集"入口卡，点击导航 /island/wrong；
+ * - 入口旁徽标经 Wrong_Set 模块 unmasteredCount(wrongSet, mastery) 展示
+ *   未掌握错题数量，未掌握为 0 时显示 0（Req 5.1）；
+ * - Island_Collection 宠物/装扮展示与"已收集 N/12"计数保持不变，
+ *   错题集徽标与收藏数据共用同一刷新机制（Req 5.7）。
+ *
  * 实现要点：
  * - 收藏数据经 Local_Store 适配器读取（collection 实体，{ items: string[] }）；
+ * - 错题集徽标数据读取 wrongSet 与 mastery 实体，经 computed 派生未掌握计数；
  * - 未收集物品显示为灰色 ❓ 剪影卡，方便孩子看到还可以收集什么；
  * - 响应式刷新（Req 5.9 模式）：挂载时读取一次，之后每 500ms 轮询
  *   Local_Store（localStore 调度写入 <1s 落盘，轮询保证变化后 1 秒内上屏），
@@ -91,8 +114,10 @@
 
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { COLLECTIBLE_ITEMS, COLLECTIBLE_TOTAL } from '../types';
-import type { IslandCollection } from '../types';
+import type { IslandCollection, MasteryRecord } from '../types';
 import { createLocalStore } from '../data/localStore';
+import { unmasteredCount } from '../engine/wrongSet';
+import type { WrongSet } from '../engine/wrongSet';
 import collectiblesSeed from '../data/seed/collectibles.json';
 
 // ---- 可收集物 emoji 映射：以种子数据 collectibles.json 为准，缺 emoji 的物品本地兜底 ----
@@ -132,6 +157,13 @@ function isCollected(id: string): boolean {
   return collectedIds.value.has(id);
 }
 
+// ---- 错题集未掌握计数（Req 5.1：与收藏数据同一刷新机制，0 时显示 0） ----
+
+const wrongSet = ref<WrongSet>(store.read('wrongSet'));
+const mastery = ref<Record<string, MasteryRecord>>(store.read('mastery'));
+/** 未掌握错题数量徽标（派生：已掌握由 mastery 实时推导，无错题时为 0） */
+const wrongUnmasteredCount = computed(() => unmasteredCount(wrongSet.value, mastery.value));
+
 // ---- 变化感知：轮询 + 跨标签页 storage 事件 ----
 
 function refresh(): void {
@@ -143,10 +175,19 @@ function refresh(): void {
   if (changed) {
     collection.value = latest;
   }
+  // 错题集徽标：与收藏数据同一刷新（Req 5.7），计数经 computed 派生，
+  // 数值不变时不会触发额外渲染
+  wrongSet.value = store.read('wrongSet');
+  mastery.value = store.read('mastery');
 }
 
 function onStorage(event: StorageEvent): void {
-  if (event.key === null || event.key === store.keyFor('collection')) {
+  if (
+    event.key === null ||
+    event.key === store.keyFor('collection') ||
+    event.key === store.keyFor('wrongSet') ||
+    event.key === store.keyFor('mastery')
+  ) {
     refresh();
   }
 }
@@ -233,6 +274,64 @@ onBeforeUnmount(() => {
   font-size: 20px;
   font-weight: bold;
   box-shadow: 0 3px 0 rgba(150, 100, 0, 0.35);
+}
+
+/* ============ 错题集入口卡（Req 5.1） ============ */
+
+.wrong-set-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 720px;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin: 0 auto 14px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 3px solid #ffd08a;
+  box-shadow: 0 4px 0 rgba(150, 100, 0, 0.25);
+  text-decoration: none;
+}
+
+.wrong-set-entry:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(150, 100, 0, 0.25);
+}
+
+.wrong-set-icon {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.wrong-set-label {
+  flex: 1 1 auto;
+  font-size: 20px;
+  font-weight: bold;
+  color: #6b4a12;
+}
+
+/* 未掌握错题数量徽标（0 时显示 0） */
+.wrong-set-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #ff6b6b;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 0 rgba(140, 20, 20, 0.35);
+}
+
+.wrong-set-arrow {
+  font-size: 24px;
+  font-weight: bold;
+  color: #c98a2a;
 }
 
 /* ============ 进度条 ============ */

@@ -4,7 +4,10 @@
  * 覆盖四个页面：
  * - HomePage：首页仅"今日冒险"一个练习入口（Req 1.1）；学科入口链接 /subject/*、
  *   宝箱/小岛入口链接 /box|/island，不存在第二个练习入口；当日会话全部完成后
- *   按钮呈"已完成"态，点击展示庆祝画面而不进入练习（Req 1.5）。
+ *   按钮呈"已完成"态，点击展示庆祝画面而不进入练习（Req 1.5）；
+ *   家长设置入口存在且触控区域 ≥44×44px、点击仅导航 /parent-settings 而不调用
+ *   startAdventure（child-grade-setting Req 1.1），childGrade 未设置时入口带红点
+ *   角标、已设置后角标隐藏（child-grade-setting Req 1.8）。
  *   测试经 createAppState({storage: createMemoryStorage()}) 创建独立 App_State
  *   并 setSharedAppState 注入，避免污染应用共享实例。
  * - BoxPage："开启（30 星星）"按钮旁标注"每次消耗 ⭐×30"（Req 5.3）；余额 <30
@@ -14,8 +17,10 @@
  *   测试按键 `kla:v1:default:{entity}` 播种钱包与收藏。
  * - IslandPage：播种 3 件收藏 → "已收集 3/12"计数（Req 5.8）；未收集物品
  *   渲染锁定 ❓ 卡；宠物区/装扮区各 6 张收集卡。
- * - SubjectPage：/subject/chinese 渲染语文大陆主题、吉祥物与唯一开始冒险按钮；
- *   非法学科 id 渲染迷路提示（Req 13.1/13.2）。
+ * - SubjectPage：/subject/chinese 渲染语文大陆主题、吉祥物、星星余额与年级
+ *   选择网格（multi-grade-mistake-book 二期规格生效：原"开始冒险"按钮流程
+ *   已由 Grade_Selector 年级选择流程取代）；非法学科 id 渲染迷路提示
+ *   （一期 Req 13.1；二期 Req 1.1）。
  * - MVP 约束（Req 13.6）：四个页面的可点击元素（button/a）均不含二期功能
  *   入口文案（阅读理解/跟读/应用题/家长/多账号）。
  *
@@ -26,11 +31,11 @@
  * 辅助函数 cssRuleBodies / declaredPx / expectMinTouchTarget 复制自
  * questionComponents.spec.ts（同源同口径）。
  *
- * _Requirements: 1.1, 5.3, 5.8, 12.2, 13.6_
+ * _Requirements: 1.1, 5.3, 5.8, 12.2, 13.6；child-grade-setting Requirements 1.1, 1.8_
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount, type VueWrapper } from '@vue/test-utils';
+import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { createMemoryHistory, createRouter, type Router } from 'vue-router';
 
@@ -102,6 +107,8 @@ function createTestRouter(): Router {
       { path: '/practice', name: 'practice', component: stub },
       { path: '/box', name: 'box', component: stub },
       { path: '/island', name: 'island', component: stub },
+      // 家长设置页（child-grade-setting 任务 6.1）
+      { path: '/parent-settings', name: 'parent-settings', component: stub },
     ],
   });
 }
@@ -217,9 +224,10 @@ describe('HomePage 首页', () => {
     expect(extraHrefs).toContain('/box');
     expect(extraHrefs).toContain('/island');
 
-    // 全页按钮仅"今日冒险"与音效开关两个，不存在第二个练习入口；
+    // 全页按钮仅"今日冒险"、家长设置入口与音效开关三个，不存在第二个练习入口
+    // （家长设置入口仅导航 /parent-settings，非练习入口，child-grade-setting Req 1.1）；
     // 也没有任何链接直达 /practice（绕过今日冒险机制的入口）
-    expect(wrapper.findAll('button')).toHaveLength(2);
+    expect(wrapper.findAll('button')).toHaveLength(3);
     expect(wrapper.findAll('a[href*="/practice"]')).toHaveLength(0);
   });
 
@@ -259,6 +267,63 @@ describe('HomePage 首页', () => {
     expectMinTouchTarget(homePageSource, '.subject-entry');
     expectMinTouchTarget(homePageSource, '.extra-entry');
     expectMinTouchTarget(homePageSource, '.sound-toggle');
+  });
+
+  it('家长设置入口存在且触控区域 ≥44×44px（child-grade-setting Req 1.1）', async () => {
+    createTestAppState();
+    const wrapper = await mountHomePage(createTestRouter());
+
+    // 第一层：顶栏渲染 Parent_Settings 入口按钮（👨‍👩‍👧 图标 + "家长"文字）
+    const parentEntry = wrapper.find('button.parent-entry');
+    expect(parentEntry.exists()).toBe(true);
+    expect(parentEntry.find('.parent-entry__icon').text()).toContain('👨‍👩‍👧');
+    expect(parentEntry.find('.parent-entry__label').text()).toContain('家长');
+
+    // 第二层：SFC scoped CSS 声明的 min-width/min-height ≥44px
+    expectMinTouchTarget(homePageSource, '.parent-entry');
+  });
+
+  it('点击家长设置入口仅导航 /parent-settings、不调用 startAdventure，"今日冒险"仍是唯一练习入口（child-grade-setting Req 1.1）', async () => {
+    const appState = createTestAppState();
+    const startSpy = vi.spyOn(appState, 'startAdventure');
+
+    const router = createTestRouter();
+    const wrapper = await mountHomePage(router);
+
+    await wrapper.find('.parent-entry').trigger('click');
+    await flushPromises();
+    await nextTick();
+
+    // 仅导航 /parent-settings：未进入练习页，未启动任何练习
+    expect(router.currentRoute.value.path).toBe('/parent-settings');
+    expect(startSpy).not.toHaveBeenCalled();
+
+    // "今日冒险"仍是首页唯一练习入口：唯一冒险按钮，且无直达 /practice 的链接
+    expect(wrapper.findAll('.adventure-button')).toHaveLength(1);
+    expect(wrapper.findAll('a[href*="/practice"]')).toHaveLength(0);
+  });
+
+  it('childGrade 未设置时入口显示未设置角标，已设置后不显示（child-grade-setting Req 1.8）', async () => {
+    const appState = createTestAppState();
+    expect(appState.childGrade.value).toBeNull();
+
+    const wrapper = await mountHomePage(createTestRouter());
+
+    // 未设置：红点角标可见，aria-label 提示未设置
+    expect(wrapper.find('.parent-entry__badge').exists()).toBe(true);
+    expect(wrapper.find('.parent-entry').attributes('aria-label')).toContain('还未设置孩子年级');
+
+    // 设置孩子年级后：角标响应式消失，aria-label 恢复常态
+    appState.setChildGrade(3);
+    await nextTick();
+    expect(wrapper.find('.parent-entry__badge').exists()).toBe(false);
+    expect(wrapper.find('.parent-entry').attributes('aria-label')).toBe('家长设置');
+
+    // 已设置状态下重新挂载：角标自始不渲染
+    wrapper.unmount();
+    const remounted = await mountHomePage(createTestRouter());
+    expect(remounted.find('.parent-entry__badge').exists()).toBe(false);
+    remounted.unmount();
   });
 });
 
@@ -466,7 +531,7 @@ describe('SubjectPage 学科页', () => {
     localStorage.clear();
   });
 
-  it('/subject/chinese 渲染语文大陆主题、吉祥物与唯一"开始冒险"按钮（Req 13.1/13.2）', async () => {
+  it('/subject/chinese 渲染语文大陆主题、吉祥物与年级选择网格（一期 Req 13.1；二期 Req 1.1）', async () => {
     const wrapper = await mountSubjectPage(createTestRouter(), 'chinese');
 
     const page = wrapper.find('[data-testid="subject-page"]');
@@ -475,15 +540,13 @@ describe('SubjectPage 学科页', () => {
     expect(wrapper.find('.subject-name').text()).toBe('语文大陆');
     expect(wrapper.find('.mascot').text()).toBe('🐼');
 
-    // 今日进度卡片（尚无会话 → 预生成预览，不落盘）
-    const progress = wrapper.find('[data-testid="today-progress"]');
-    expect(progress.exists()).toBe(true);
-    expect(progress.text()).toContain('今天为你准备了');
+    // 二期 Grade_Selector：语文学科渲染 6 个年级选项
+    const gradeSelector = wrapper.find('[data-testid="grade-selector"]');
+    expect(gradeSelector.exists()).toBe(true);
+    expect(gradeSelector.findAll('[data-testid="grade-option"]')).toHaveLength(6);
 
-    // 唯一开始冒险按钮，无任何科目外前置选择
-    const startButtons = wrapper.findAll('[data-testid="start-adventure"]');
-    expect(startButtons).toHaveLength(1);
-    expect(startButtons[0].text()).toContain('开始冒险');
+    // 原"开始冒险"按钮流程已被年级选择流程取代，不再存在
+    expect(wrapper.find('[data-testid="start-adventure"]').exists()).toBe(false);
 
     // 星星余额与返回地图入口
     expect(wrapper.find('[data-testid="star-balance"]').exists()).toBe(true);
@@ -506,20 +569,21 @@ describe('SubjectPage 学科页', () => {
 
     // 第一层：交互元素携带约定 class（cele-btn 在迷路页常态渲染）
     expect(wrapper.find('[data-testid="back-home"].nav-btn').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="start-adventure"].start-btn').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="grade-option"].grade-btn').exists()).toBe(true);
     expect(lostWrapper.find('.cele-btn').exists()).toBe(true);
 
     // 第二层：min-width + min-height 均 ≥44px
     expectMinTouchTarget(subjectPageSource, '.nav-btn');
-    expectMinTouchTarget(subjectPageSource, '.start-btn');
+    expectMinTouchTarget(subjectPageSource, '.grade-btn');
     expectMinTouchTarget(subjectPageSource, '.cele-btn');
   });
 });
 
 // ============ MVP 界面无二期功能入口（Req 13.6） ============
 
-/** 二期功能入口关键词：阅读理解 / 跟读评分 / 多步骤应用题 / 家长报告 / 多账号 */
-const PHASE2_ENTRY_KEYWORDS = ['阅读理解', '跟读', '应用题', '家长', '多账号'];
+/** 二期功能入口关键词：阅读理解 / 跟读评分 / 多步骤应用题 / 家长报告 / 多账号
+ * （"家长报告"用全称：三期 child-grade-setting 已在首页合法新增"家长"设置入口，Req 1.1） */
+const PHASE2_ENTRY_KEYWORDS = ['阅读理解', '跟读', '应用题', '家长报告', '多账号'];
 
 /** 断言页面全部可点击元素（button/a）文本均不含二期功能入口关键词 */
 function expectNoPhase2Entries(wrapper: VueWrapper, pageName: string): void {

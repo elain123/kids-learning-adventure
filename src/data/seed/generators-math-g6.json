@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "generators": [
+    {
+      "id": "gen-math-g6-fraction-mul-int",
+      "knowledgePointId": "math.g6.fraction.mul",
+      "grade": 6,
+      "difficulty": 4,
+      "template": "{a} × 1/{b} = ?",
+      "operands": {
+        "a": { "min": 2, "max": 48, "integer": true },
+        "b": { "min": 2, "max": 9, "integer": true }
+      },
+      "operation": "div",
+      "constraints": {
+        "resultMin": 1,
+        "resultMax": 24,
+        "divisible": true,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g6-fraction-div-int",
+      "knowledgePointId": "math.g6.fraction.div",
+      "grade": 6,
+      "difficulty": 4,
+      "template": "{a} ÷ 1/{b} = ?",
+      "operands": {
+        "a": { "min": 2, "max": 12, "integer": true },
+        "b": { "min": 2, "max": 9, "integer": true }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 4,
+        "resultMax": 108,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g6-arithmetic-mixed",
+      "knowledgePointId": "math.g6.arithmetic.mixed",
+      "grade": 6,
+      "difficulty": 5,
+      "template": "{a} {op} {b} = ?",
+      "operands": {
+        "a": { "min": 10, "max": 200, "integer": true },
+        "b": { "min": 2, "max": 50, "integer": true }
+      },
+      "operation": "mixed",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 10000,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    }
+  ]
+}

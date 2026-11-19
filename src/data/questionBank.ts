@@ -18,6 +18,7 @@
 import {
   PHASE2_QUESTION_TYPES,
   type Difficulty,
+  type GeneratorParams,
   type Question,
   type QuestionAnswer,
   type QuestionMedia,
@@ -500,4 +501,43 @@ export function buildQuestionIndex(questions: readonly Question[]): QuestionInde
     }
   }
   return index;
+}
+// ============ 按学科+年级过滤（multi-grade-mistake-book Req 3.1、Property 4） ============
+
+/**
+ * 按学科+年级过滤题库索引。
+ * 结果中每道题的 subject 与 grade 均等于入参；沿用 buildQuestionIndex 重建索引，
+ * 完整保留 QuestionIndex 结构（all/byId/bySubject/byGrade/byUnit/byKnowledgePoint/
+ * queueEligible/deferred），因此过滤后的索引可直接交给既有 buildTodayQueue 管线，
+ * 保证生成的队列纯净（每道题学科与年级均等于所选值）。
+ *
+ * 纯函数：不修改入参索引，返回的新索引与入参共享题面对象引用（题面本身不可变）。
+ *
+ * @param index 全量题库索引（由 buildQuestionIndex 构建）
+ * @param subject 学科
+ * @param grade 年级（整数 1-6）
+ */
+export function filterBankForGrade(
+  index: QuestionIndex,
+  subject: Subject,
+  grade: number
+): QuestionIndex {
+  return buildQuestionIndex(
+    index.all.filter((q) => q.subject === subject && q.grade === grade)
+  );
+}
+
+/**
+ * 按年级过滤口算生成器参数。
+ * 结果中每个 GeneratorParams 的 grade 均等于入参；
+ * 语文/英语流程传入空数组时返回空数组（等价于该学科无生成器）。
+ *
+ * @param generators 全量口算生成器参数列表
+ * @param grade 年级（整数 1-6）
+ */
+export function filterGeneratorsForGrade(
+  generators: readonly GeneratorParams[],
+  grade: number
+): GeneratorParams[] {
+  return generators.filter((g) => g.grade === grade);
 }

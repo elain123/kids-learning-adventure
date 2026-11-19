@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generators": [
+    {
+      "id": "gen-math-g5-decimal-mul-int",
+      "knowledgePointId": "math.g5.decimal.mul.int",
+      "grade": 5,
+      "difficulty": 3,
+      "template": "{a} × {b} = ?",
+      "operands": {
+        "a": { "min": 0.1, "max": 9.9, "integer": false },
+        "b": { "min": 2, "max": 9, "integer": true }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 0.2,
+        "resultMax": 89.1,
+        "divisible": false,
+        "decimalPlaces": 2
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g5-decimal-mul",
+      "knowledgePointId": "math.g5.decimal.mul",
+      "grade": 5,
+      "difficulty": 4,
+      "template": "{a} × {b} = ?",
+      "operands": {
+        "a": { "min": 0.1, "max": 9.9, "integer": false },
+        "b": { "min": 0.1, "max": 9.9, "integer": false }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 0.01,
+        "resultMax": 98.01,
+        "divisible": false,
+        "decimalPlaces": 2
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g5-decimal-div-int",
+      "knowledgePointId": "math.g5.decimal.div.int",
+      "grade": 5,
+      "difficulty": 3,
+      "template": "{a} ÷ {b} = ?",
+      "operands": {
+        "a": { "min": 0.1, "max": 99.9, "integer": false },
+        "b": { "min": 2, "max": 9, "integer": true }
+      },
+      "operation": "div",
+      "constraints": {
+        "resultMin": 0.01,
+        "resultMax": 49.95,
+        "divisible": false,
+        "decimalPlaces": 2
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g5-decimal-div",
+      "knowledgePointId": "math.g5.decimal.div",
+      "grade": 5,
+      "difficulty": 4,
+      "template": "{a} ÷ {b} = ?",
+      "operands": {
+        "a": { "min": 0.1, "max": 9.9, "integer": false },
+        "b": { "min": 0.1, "max": 9.9, "integer": false }
+      },
+      "operation": "div",
+      "constraints": {
+        "resultMin": 0.01,
+        "resultMax": 99,
+        "divisible": false,
+        "decimalPlaces": 2
+      },
+      "answerFormat": "number"
+    }
+  ]
+}

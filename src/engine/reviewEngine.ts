@@ -121,6 +121,26 @@ import {
   TodaySession,
 } from '../types';
 import { isQueueEligible, type QuestionIndex } from '../data/questionBank';
+import { kpIdGrade } from './kpId';
+
+/**
+ * 年级上限谓词（childGrade 过滤的统一判定）：
+ * - childGrade 为 null/undefined（未设置）：不过滤，恒为 true；
+ * - childGrade 已设置：grade 必须可判定（非 null）且 ≤ childGrade；
+ *   grade 为 null（kpId 年级段无法解析）时 fail-closed 排除。
+ */
+function gradeWithinLimit(
+  grade: number | null,
+  childGrade: number | null | undefined
+): boolean {
+  if (childGrade === null || childGrade === undefined) {
+    return true;
+  }
+  if (grade === null) {
+    return false;
+  }
+  return grade <= childGrade;
+}
 
 /**
  * 由注入的时间戳计算本地自然日字符串 'YYYY-MM-DD'。
@@ -163,11 +183,16 @@ function pickItemForKnowledgePoint(
   knowledgePointId: string,
   bank: QuestionIndex,
   generators: readonly GeneratorParams[],
-  source: QueueItem['source']
+  source: QueueItem['source'],
+  childGrade: number | null = null
 ): QueueItem | null {
   const questions = bank.byKnowledgePoint.get(knowledgePointId);
   if (questions) {
-    const eligible = questions.find(isQueueEligible);
+    // 内部取题同样施加年级谓词：防止契约破坏数据
+    // （q.grade 与 kpId 年级段不一致）经复习段混入
+    const eligible = questions.find(
+      (q) => isQueueEligible(q) && gradeWithinLimit(q.grade, childGrade)
+    );
     if (eligible) {
       return {
         kind: 'bank',
@@ -180,7 +205,9 @@ function pickItemForKnowledgePoint(
       };
     }
   }
-  const gen = generators.find((g) => g.knowledgePointId === knowledgePointId);
+  const gen = generators.find(
+    (g) => g.knowledgePointId === knowledgePointId && gradeWithinLimit(g.grade, childGrade)
+  );
   if (gen) {
     return {
       kind: 'generated',
@@ -211,27 +238,47 @@ function pickItemForKnowledgePoint(
  * 注意：本函数只负责生成队列本身；"当日是否已生成"的判定由
  * shouldGenerateTodayQueue 承担，调用方（冒险引擎）应先调用后者。
  *
+ * 过滤（可选 childGrade 参数，默认 null = 未设置不过滤）：
+ * 过滤施加于候选枚举点（Requirement 2.1 的三个年级来源）：
+ * - 复习段：到点记录追加条件 gradeWithinLimit(kpIdGrade(rec.knowledgePointId), childGrade)，
+ *   年级超限或不可解析的到点知识点不进入复习段（Requirement 2.3），其记录本身不被修改
+ *   （Requirement 2.4）；
+ * - 新知识点段（题库）：枚举 bank.queueEligible 时要求 gradeWithinLimit(q.grade, childGrade)；
+ * - 新知识点段（生成器）：枚举 generators 时要求 gradeWithinLimit(g.grade, childGrade)；
+ * - pickItemForKnowledgePoint 内部取题/取生成器时同样施加谓词，防止契约破坏数据
+ *   （q.grade 与 kpId 年级段不一致）经复习段混入。
+ * 其余语义不变：复习段按 nextReviewAt 升序在前、新知识点段在后，
+ * 各段数量上限不变（Requirement 2.7）；childGrade=null 时输出与
+ * 既有五参调用完全一致（Requirement 3.1）。
+ *
  * @param records 全部知识点掌握度记录（knowledgePointId → MasteryRecord）
  * @param bank 题库索引（由 buildQuestionIndex 构建）
  * @param now 当前时间戳（毫秒），由调用方注入
  * @param config 会话配置（maxNewPerSession / maxReviewPerSession 上限）
  * @param generators 口算生成器参数列表（可选；QuestionIndex 不索引 GeneratorParams，
  *                   故由调用方传入，用于为口算知识点产出 kind='generated' 队列项）
+ * @param childGrade 孩子年级上限（可选，默认 null = 未设置不过滤）；
+ *                   设置后仅纳入年级 ≤ childGrade 的队列项
  */
 export function buildTodayQueue(
   records: Record<string, MasteryRecord>,
   bank: QuestionIndex,
   now: number,
   config: SessionConfig,
-  generators: readonly GeneratorParams[] = []
+  generators: readonly GeneratorParams[] = [],
+  childGrade: number | null = null
 ): QueueItem[] {
   const queue: QueueItem[] = [];
 
   // ---- 复习段：到点（nextReviewAt ≤ now）且未掌握的知识点，按 nextReviewAt 升序 ----
+  // childGrade 已设置时追加年级谓词：kpId 年级段不可解析（null）fail-closed 排除
   const dueRecords = Object.values(records)
     .filter(
       (rec) =>
-        !rec.mastered && rec.nextReviewAt !== null && rec.nextReviewAt <= now
+        !rec.mastered &&
+        rec.nextReviewAt !== null &&
+        rec.nextReviewAt <= now &&
+        gradeWithinLimit(kpIdGrade(rec.knowledgePointId), childGrade)
     )
     .sort((a, b) => (a.nextReviewAt as number) - (b.nextReviewAt as number));
 
@@ -241,7 +288,7 @@ export function buildTodayQueue(
     if (reviewCount >= reviewCap) {
       break;
     }
-    const item = pickItemForKnowledgePoint(rec.knowledgePointId, bank, generators, 'review');
+    const item = pickItemForKnowledgePoint(rec.knowledgePointId, bank, generators, 'review', childGrade);
     if (item) {
       queue.push(item);
       reviewCount += 1;
@@ -252,13 +299,21 @@ export function buildTodayQueue(
   const seen = new Set<string>();
   const newKpIds: string[] = [];
   for (const q of bank.queueEligible) {
-    if (!(q.knowledgePointId in records) && !seen.has(q.knowledgePointId)) {
+    if (
+      !(q.knowledgePointId in records) &&
+      !seen.has(q.knowledgePointId) &&
+      gradeWithinLimit(q.grade, childGrade)
+    ) {
       seen.add(q.knowledgePointId);
       newKpIds.push(q.knowledgePointId);
     }
   }
   for (const g of generators) {
-    if (!(g.knowledgePointId in records) && !seen.has(g.knowledgePointId)) {
+    if (
+      !(g.knowledgePointId in records) &&
+      !seen.has(g.knowledgePointId) &&
+      gradeWithinLimit(g.grade, childGrade)
+    ) {
       seen.add(g.knowledgePointId);
       newKpIds.push(g.knowledgePointId);
     }
@@ -270,7 +325,7 @@ export function buildTodayQueue(
     if (newCount >= newCap) {
       break;
     }
-    const item = pickItemForKnowledgePoint(kpId, bank, generators, 'new');
+    const item = pickItemForKnowledgePoint(kpId, bank, generators, 'new', childGrade);
     if (item) {
       queue.push(item);
       newCount += 1;

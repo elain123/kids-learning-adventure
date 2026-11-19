@@ -90,15 +90,47 @@ const arbMastery: fc.Arbitrary<Record<string, MasteryRecord>> = fc.dictionary(
   { maxKeys: 6 },
 );
 
+// Wrong_Set v2 结构（multi-grade-mistake-book 任务 5.1：元素含 subject/grade/
+// wrongCount 与可选 generated 快照；v1 的 retriedCorrect 随形状升级移除）
+const arbGrade = fc.integer({ min: 1, max: 6 });
+
+const arbGeneratedSnapshot = fc.record({
+  paramsId: arbId,
+  stem: arbId,
+  operands: fc.dictionary(arbId, fc.integer({ min: -10_000, max: 10_000 }), { maxKeys: 4 }),
+  answer: fc.integer({ min: -1_000_000, max: 1_000_000 }),
+});
+
 const arbWrongSetItem: fc.Arbitrary<WrongSetItem> = fc.record({
   questionRef: arbId,
+  subject: arbSubject,
+  grade: arbGrade,
   knowledgePointId: arbId,
   wrongAt: arbTimestamp,
-  retriedCorrect: fc.boolean(),
+  wrongCount: fc.integer({ min: 1, max: 10_000 }),
+  generated: fc.option(arbGeneratedSnapshot, { nil: undefined }),
 });
 
 const arbWrongSet: fc.Arbitrary<WrongSet> = fc.record({
   items: fc.array(arbWrongSetItem, { maxLength: 10 }),
+});
+
+/** Last_Grade：三学科的可选年级记录（任意子集，含空形态） */
+const arbLastGrade: fc.Arbitrary<EntityTypeMap['lastGrade']> = fc.record(
+  {
+    chinese: arbGrade,
+    math: arbGrade,
+    english: arbGrade,
+  },
+  { requiredKeys: [] },
+);
+
+/** 组合会话键："{subject}:{grade}"（grade 1-6，符合 isSubjectSessionMap 键形状） */
+const arbSubjectGradeKey = fc.tuple(arbSubject, arbGrade).map(([s, g]) => `${s}:${g}`);
+
+/** Child_Grade：null（未设置）或 1-6 整数（child-grade-setting 任务 2.1） */
+const arbChildGrade: fc.Arbitrary<EntityTypeMap['childGrade']> = fc.option(arbGrade, {
+  nil: null,
 });
 
 const arbWallet: fc.Arbitrary<StarWallet> = fc.record({
@@ -183,6 +215,13 @@ const arbOralBest: fc.Arbitrary<Record<string, OralBestEntry>> = fc.dictionary(
 
 const arbSettings: fc.Arbitrary<Settings> = fc.record({ soundOn: fc.boolean() });
 
+/** 学科年级分组合会话：键符合 "{subject}:{grade}"，值为合法 TodaySession */
+const arbSubjectSessions: fc.Arbitrary<EntityTypeMap['session:subjects']> = fc.dictionary(
+  arbSubjectGradeKey,
+  arbTodaySession,
+  { maxKeys: 4 },
+) as fc.Arbitrary<EntityTypeMap['session:subjects']>;
+
 /** 各实体合法值生成器映射 */
 const ENTITY_VALUE_ARBS: { [E in EntityName]: fc.Arbitrary<EntityTypeMap[E]> } = {
   mastery: arbMastery,
@@ -192,6 +231,9 @@ const ENTITY_VALUE_ARBS: { [E in EntityName]: fc.Arbitrary<EntityTypeMap[E]> } =
   'session:today': arbSessionToday,
   oralBest: arbOralBest,
   settings: arbSettings,
+  lastGrade: arbLastGrade,
+  'session:subjects': arbSubjectSessions,
+  childGrade: arbChildGrade,
 };
 
 // ============ 生成器：账号标识 ============
@@ -238,7 +280,26 @@ function isMasteryRecordLike(value: unknown): boolean {
   );
 }
 
-function isWrongSetLike(value: unknown): boolean {
+/** 合法年级（1-6 整数，镜像 localStore isGradeValue） */
+function isGradeLike(value: unknown): boolean {
+  return Number.isInteger(value) && (value as number) >= 1 && (value as number) <= 6;
+}
+
+function isGeneratedSnapshotLike(value: unknown): boolean {
+  return (
+    isPlainObject(value) &&
+    typeof value.paramsId === 'string' &&
+    typeof value.stem === 'string' &&
+    isPlainObject(value.operands) &&
+    Object.values(value.operands).every(isFiniteNumber) &&
+    isFiniteNumber(value.answer)
+  );
+}
+
+/**
+ * Wrong_Set v2 校验预言（multi-grade-mistake-book 任务 5.1，镜像 localStore isWrongSetV2）
+ */
+function isWrongSetV2Like(value: unknown): boolean {
   return (
     isPlainObject(value) &&
     Array.isArray(value.items) &&
@@ -246,10 +307,27 @@ function isWrongSetLike(value: unknown): boolean {
       (item) =>
         isPlainObject(item) &&
         typeof item.questionRef === 'string' &&
+        SUBJECTS.includes(item.subject as string) &&
+        isGradeLike(item.grade) &&
         typeof item.knowledgePointId === 'string' &&
         isFiniteNumber(item.wrongAt) &&
-        typeof item.retriedCorrect === 'boolean',
+        Number.isInteger(item.wrongCount) &&
+        (item.wrongCount as number) >= 1 &&
+        (item.generated === undefined || isGeneratedSnapshotLike(item.generated)),
     )
+  );
+}
+
+/**
+ * 可识别 v1 形状预言（任一元素缺 wrongCount）：
+ * 该形状读取时经迁移钩子升级（Req 6.6 优先于备份重置），不属于"损坏"，
+ * 故损坏生成器必须排除此形状才能保证走备份自愈路径。
+ */
+function isLegacyV1WrongSetLike(value: unknown): boolean {
+  return (
+    isPlainObject(value) &&
+    Array.isArray(value.items) &&
+    value.items.some((el) => !(isPlainObject(el) && isFiniteNumber(el.wrongCount)))
   );
 }
 
@@ -298,13 +376,20 @@ function isTodaySessionLike(value: unknown): boolean {
   );
 }
 
-/** 按实体分发必需字段校验（与 localStore 读取契约一致） */
+/** 组合会话键形状（镜像 localStore SUBJECT_GRADE_KEY_RE） */
+const SUBJECT_GRADE_KEY_RE = /^(chinese|math|english):[1-6]$/;
+
+/**
+ * 按实体分发"无需备份自愈即可读取"的判定（与 localStore 读取契约一致）。
+ * 注意 wrongSet（multi-grade-mistake-book 任务 5.1）：合法 v2 或可识别 v1
+ * 形状都不会走备份重置路径（v1 走迁移），因此二者都不算"损坏"。
+ */
 function isValidForEntity(entity: EntityName, value: unknown): boolean {
   switch (entity) {
     case 'mastery':
       return isPlainObject(value) && Object.values(value).every(isMasteryRecordLike);
     case 'wrongSet':
-      return isWrongSetLike(value);
+      return isWrongSetV2Like(value) || isLegacyV1WrongSetLike(value);
     case 'wallet':
       return isPlainObject(value) && isFiniteNumber(value.balance) && isFiniteNumber(value.totalEarned);
     case 'collection':
@@ -324,6 +409,23 @@ function isValidForEntity(entity: EntityName, value: unknown): boolean {
       );
     case 'settings':
       return isPlainObject(value) && typeof value.soundOn === 'boolean';
+    case 'lastGrade':
+      return (
+        isPlainObject(value) &&
+        Object.entries(value).every(
+          ([key, grade]) => SUBJECTS.includes(key) && isGradeLike(grade),
+        )
+      );
+    case 'session:subjects':
+      return (
+        isPlainObject(value) &&
+        Object.entries(value).every(
+          ([key, session]) => SUBJECT_GRADE_KEY_RE.test(key) && isTodaySessionLike(session),
+        )
+      );
+    case 'childGrade':
+      // null（未设置）或 1-6 整数（镜像 localStore isChildGrade）
+      return value === null || isGradeLike(value);
   }
 }
 

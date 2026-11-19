@@ -1,0 +1,583 @@
+{
+  "pbtResults": {
+    "2.2 编写属性测试：孩子年级持久化读写往返": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071320291
+    },
+    "1.2 编写属性测试：家长确认挑战生成与校验": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071361632
+    },
+    "2.4 编写属性测试：损坏数据自愈、备份保留且此后可正常写入": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071361895
+    },
+    "2.3 编写属性测试：缺失数据按未设置启动且无备份": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071365950
+    },
+    "2.5 编写属性测试：孩子年级账号隔离": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071494753
+    },
+    "3.5 编写属性测试：未设置与既有行为等价": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071558716
+    },
+    "3.4 编写属性测试：过滤不修改掌握度记录": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071663472
+    },
+    "3.3 编写属性测试：过滤后队列组织规则保持": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071665977
+    },
+    "3.2 编写属性测试：按孩子年级过滤的队列纯净": {
+      "status": "passed",
+      "lastRunTimestamp": 1795071769048
+    },
+    "4.4 编写属性测试：1 秒内写入且最后写入生效": {
+      "status": "passed",
+      "lastRunTimestamp": 1795072050542
+    },
+    "4.3 编写属性测试：设置孩子年级不触碰其他实体": {
+      "status": "passed",
+      "lastRunTimestamp": 1795072063013
+    },
+    "3.6 编写属性测试：过滤单调性与调高再纳入": {
+      "status": "passed",
+      "lastRunTimestamp": 1795072087754
+    },
+    "4.2 编写属性测试：设置变更的生效时机": {
+      "status": "passed",
+      "lastRunTimestamp": 1795072222744
+    }
+  },
+  "executionHistory": {
+    "1.1 实现家长确认挑战生成与答案校验": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070869831
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070880512
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071153376
+      }
+    ],
+    "2.1 升级 src/data/localStore.ts 新增 childGrade 实体": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070869900
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070881927
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071153798
+      }
+    ],
+    "3.1 为 buildTodayQueue 增加可选 childGrade 过滤": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070869976
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070882732
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071153999
+      }
+    ],
+    "4.1 修改 src/stores/appState.ts 完成接线": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070870045
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071202733
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071383888
+      }
+    ],
+    "5. Checkpoint - 纯函数模块、存储实体与 App_State 接线完成": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070870132
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072776049
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073197238
+      }
+    ],
+    "6.1 新增 /parent-settings 路由与页面（家长确认 → 年级选择）": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070870197
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072266425
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072768770
+      }
+    ],
+    "7.1 改造 src/pages/HomePage.vue 新增家长入口": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070870265
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072268285
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072769345
+      }
+    ],
+    "9. Final checkpoint - 全部测试通过": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795070870337
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073756057
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073928202
+      }
+    ],
+    "1. Parent_Gate 门禁模块（纯函数）": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071153465
+      }
+    ],
+    "2. Local_Store childGrade 实体登记": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071153847
+      }
+    ],
+    "3. Review_Engine childGrade 过滤参数": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071154063
+      }
+    ],
+    "1.2 编写属性测试：家长确认挑战生成与校验": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071168043
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071203527
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071384674
+      }
+    ],
+    "2.2 编写属性测试：孩子年级持久化读写往返": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071168247
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071204330
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071385493
+      }
+    ],
+    "2.3 编写属性测试：缺失数据按未设置启动且无备份": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071170027
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071205143
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071386569
+      }
+    ],
+    "2.4 编写属性测试：损坏数据自愈、备份保留且此后可正常写入": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071171124
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071205658
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071387139
+      }
+    ],
+    "2.5 编写属性测试：孩子年级账号隔离": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071171938
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071393087
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071791276
+      }
+    ],
+    "3.2 编写属性测试：按孩子年级过滤的队列纯净": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071172533
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071394789
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071792245
+      }
+    ],
+    "3.3 编写属性测试：过滤后队列组织规则保持": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071173163
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071395975
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071793264
+      }
+    ],
+    "3.4 编写属性测试：过滤不修改掌握度记录": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071173559
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071397391
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071794495
+      }
+    ],
+    "3.5 编写属性测试：未设置与既有行为等价": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071174184
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071398025
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071795302
+      }
+    ],
+    "3.6 编写属性测试：过滤单调性与调高再纳入": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071174579
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071802379
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072253110
+      }
+    ],
+    "3.7 编写单元测试：英语排除与既有调用方回归": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071174793
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071803377
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072253543
+      }
+    ],
+    "4.2 编写属性测试：设置变更的生效时机": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071175208
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071804399
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072253876
+      }
+    ],
+    "4.3 编写属性测试：设置孩子年级不触碰其他实体": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071175623
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071805829
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072254076
+      }
+    ],
+    "4.4 编写属性测试：1 秒内写入且最后写入生效": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071175858
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071806650
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072254276
+      }
+    ],
+    "4.5 编写单元测试：启动恢复、写失败与升级保留": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071176285
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072265607
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072766784
+      }
+    ],
+    "6.2 编写组件单元测试：ParentSettingsPage 行为": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071176693
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072776862
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073198197
+      }
+    ],
+    "7.2 编写单元测试：首页入口行为与回归": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071176849
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072777361
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073198690
+      }
+    ],
+    "8.1 编写家长设置主链路集成测试": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071177257
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073203788
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073743728
+      }
+    ],
+    "8.2 编写当日不受扰链路集成测试": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071177453
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073204588
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073743883
+      }
+    ],
+    "8.3 编写升级冒烟测试": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071177735
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073205024
+      },
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073743999
+      }
+    ],
+    "4. App_State 接线（childGrade 响应式引用、setChildGrade、startAdventure）": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795071383956
+      }
+    ],
+    "6. ParentSettingsPage 页面与路由": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072768853
+      }
+    ],
+    "7. 首页 Parent_Settings 入口按钮": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795072769410
+      }
+    ],
+    "8. 集成与冒烟测试": [
+      {
+        "executionId": "828447a7-c34b-4f5c-8b75-9b2f78b6447f",
+        "chatSessionId": "sess_ead08d1f-e122-43be-9f2b-6c4b9554b1eb",
+        "timestamp": 1795073743800
+      }
+    ]
+  }
+}

@@ -1,0 +1,394 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 实现年级选项与 Last_Grade 标记计算": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055293746
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055309672
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056078671
+      }
+    ],
+    "2.1 实现按学科+年级过滤、kpId 解析与组合会话更新": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055293857
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056097752
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056579099
+      }
+    ],
+    "3.1 实现错题记录、派生状态、分组与重练定盘": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055293938
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055310669
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056079445
+      }
+    ],
+    "4.1 实现 migrateWrongSetV1 形状检测与迁移": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294041
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056589845
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056828124
+      }
+    ],
+    "5.1 升级 src/data/localStore.ts（新实体与 wrongSet 同键原地升级）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294126
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056836696
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795057490707
+      }
+    ],
+    "5.2 切换 PracticePage.vue 错题记账（修复 appendWrongSet 重复入账）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294209
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795057496606
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064727138
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064727345
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064740900
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064900872
+      }
+    ],
+    "6. Checkpoint - 纯函数模块与存储层完成": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294275
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067199630
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067295630
+      }
+    ],
+    "7.1 编写语文新增年级种子": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294353
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055311690
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056080069
+      }
+    ],
+    "7.2 编写数学新增年级种子与口算生成器参数": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294419
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055313115
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056081091
+      }
+    ],
+    "7.3 编写英语新增年级种子": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294490
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055313810
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056081588
+      }
+    ],
+    "8.1 改造 loadSeedBank 聚合全部种子文件": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294571
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056099156
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056579579
+      }
+    ],
+    "9.1 改造 src/pages/SubjectPage.vue 为年级选择流程": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294660
+      },
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795057497676
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064727221
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064727426
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064741590
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064901488
+      }
+    ],
+    "10.1 PracticePage.vue 支持 ?subject=&grade= 参数": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294721
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064912482
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795065255752
+      }
+    ],
+    "11. Checkpoint - 年级选择与学科练习流程完成": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294785
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067301608
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067484269
+      }
+    ],
+    "12.1 新增路由与 Wrong_Set_View 页面": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294856
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795065269264
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795065957474
+      }
+    ],
+    "12.2 改造 src/pages/IslandPage.vue 增加错题集入口": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294926
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795065962155
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067192109
+      }
+    ],
+    "14. Final checkpoint - 全部测试通过": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795055294993
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067490967
+      },
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067669332
+      }
+    ],
+    "1. 年级配置模块（Grade_Selector 纯函数）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056078788
+      }
+    ],
+    "3. Wrong_Set v2 记录模块（纯函数）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056079519
+      }
+    ],
+    "7. 种子题库扩充（一至六年级）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056081655
+      }
+    ],
+    "2. 题库年级过滤与组合会话键（纯函数）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056579181
+      }
+    ],
+    "8. 题库聚合加载升级": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056579651
+      }
+    ],
+    "4. Wrong_Set v1→v2 迁移模块（纯函数）": [
+      {
+        "executionId": "9044827c-7113-4bb5-a690-3aa24db1e500",
+        "chatSessionId": "sess_76a9a5ca-8120-48d8-87a8-6004157671ef",
+        "timestamp": 1795056828231
+      }
+    ],
+    "5. Local_Store 扩充与练习页错题记账切换": [
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064900936
+      }
+    ],
+    "9. 学科入口页 Grade_Selector 改造": [
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795064901571
+      }
+    ],
+    "10. 练习页学科年级流程": [
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795065255830
+      }
+    ],
+    "12. 错题集查看页与小岛入口": [
+      {
+        "executionId": "367095b5-a5ad-4b5f-b01f-48787a4d378e",
+        "chatSessionId": "sess_067d2e9f-6e55-483f-92c5-4dc6a6957e86",
+        "timestamp": 1795067192191
+      }
+    ]
+  }
+}

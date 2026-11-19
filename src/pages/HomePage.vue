@@ -20,21 +20,39 @@
     </div>
 
     <div class="home-page__content">
-      <!-- 顶栏：星星余额（变化 1 秒内刷新，Req 5.9）+ 音效开关（Req 12.5） -->
+      <!-- 顶栏：星星余额（变化 1 秒内刷新，Req 5.9）+ 家长入口（child-grade-setting Req 1.1）+ 音效开关（Req 12.5） -->
       <header class="home-page__topbar">
         <div class="star-balance" role="status" aria-label="星星余额">
           <span class="star-balance__icon" aria-hidden="true">⭐</span>
           <span class="star-balance__count">{{ wallet.balance }}</span>
         </div>
-        <button
-          type="button"
-          class="sound-toggle"
-          :aria-label="soundOn ? '关闭音效' : '开启音效'"
-          :aria-pressed="soundOn"
-          @click="toggleSound"
-        >
-          <span aria-hidden="true">{{ soundOn ? '🔊' : '🔇' }}</span>
-        </button>
+        <div class="home-page__topbar-actions">
+          <!-- Parent_Settings 入口：仅导航 /parent-settings，不启动任何练习（Req 1.1）；
+               Child_Grade 未设置时显示红点角标（Req 1.8） -->
+          <button
+            type="button"
+            class="parent-entry"
+            :aria-label="childGrade === null ? '家长设置（还未设置孩子年级）' : '家长设置'"
+            @click="goParentSettings"
+          >
+            <span class="parent-entry__icon" aria-hidden="true">👨‍👩‍👧</span>
+            <span class="parent-entry__label">家长</span>
+            <span
+              v-if="childGrade === null"
+              class="parent-entry__badge"
+              aria-hidden="true"
+            ></span>
+          </button>
+          <button
+            type="button"
+            class="sound-toggle"
+            :aria-label="soundOn ? '关闭音效' : '开启音效'"
+            :aria-pressed="soundOn"
+            @click="toggleSound"
+          >
+            <span aria-hidden="true">{{ soundOn ? '🔊' : '🔇' }}</span>
+          </button>
+        </div>
       </header>
 
       <h1 class="home-page__title">
@@ -138,10 +156,13 @@
  * - 当日全部完成后按钮呈"已完成"态，再次点击展示完成庆祝画面而不进入练习（Req 1.5）；
  * - 星星余额响应式展示，变化 1 秒内刷新（Req 5.9）；
  * - 宝箱（/box）与小岛（/island）入口；音效开关接 Feedback_Service（默认开，Req 12.5）；
+ * - 顶栏家长入口（child-grade-setting Req 1.1）：仅导航 /parent-settings，不启动任何练习；
+ *   Child_Grade 未设置时按钮带红点角标（child-grade-setting Req 1.8），已设置后不显示；
  * - 题库整体加载失败常显"题库加载失败"并停留首页（Req 9.5）；
  *   无可出题时提示并停留首页（Req 1.7）。
  *
  * Validates: Requirements 1.1, 1.2, 1.5, 1.7, 5.9, 9.5, 12.1, 12.5
+ * Validates: child-grade-setting Requirements 1.1, 1.8
  */
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -155,6 +176,8 @@ const wallet = appState.wallet;
 const soundOn = appState.soundOn;
 const bankError = appState.bankError;
 const todayDone = appState.todayDone;
+// 孩子年级（child-grade-setting Req 4.3）：null = 未设置，驱动家长入口未设置角标（Req 1.8）
+const childGrade = appState.childGrade;
 
 /** 无可出题提示（Req 1.7） */
 const showEmptyPrompt = ref(false);
@@ -202,6 +225,11 @@ function onAdventureClick(): void {
 /** 音效开关（Req 12.5、12.6、12.7：经 Feedback_Service 持久化） */
 function toggleSound(): void {
   appState.setSoundOn(!soundOn.value);
+}
+
+/** 家长入口：仅导航 /parent-settings，不启动任何练习（child-grade-setting Req 1.1） */
+function goParentSettings(): void {
+  void router.push('/parent-settings');
 }
 
 function closeCelebration(): void {
@@ -441,6 +469,58 @@ function closeCelebration(): void {
 .sound-toggle:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #f0b429;
+}
+
+/* 顶栏右侧动作区：家长入口 + 音效开关 */
+.home-page__topbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Parent_Settings 入口（child-grade-setting Req 1.1）：触控区域 ≥44×44px，造型同音效开关 */
+.parent-entry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 3px solid #ffd166;
+  border-radius: 999px;
+  background-color: rgba(255, 253, 245, 0.95);
+  color: #4a3b2a;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 3px 0 #f0b429;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.parent-entry:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #f0b429;
+}
+
+.parent-entry__icon {
+  font-size: 22px;
+}
+
+/* 未设置角标（child-grade-setting Req 1.8）：红点提示家长完成孩子年级设置 */
+.parent-entry__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fffdf5;
+  border-radius: 50%;
+  background-color: #e63946;
 }
 
 .home-page__title {

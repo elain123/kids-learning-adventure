@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "cn-g1a-u1-pinyin-0001",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u1",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.001",
+      "difficulty": 1,
+      "stem": "选出汉字“天”的正确读音",
+      "options": [
+        { "id": "a", "text": "tiān" },
+        { "id": "b", "text": "tián" },
+        { "id": "c", "text": "tān" },
+        { "id": "d", "text": "qiān" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“天”的韵母是 ian",
+      "analysis": "“天”读 tiān，第一声，韵母是 ian。《天地人》里“天、地、人”是我们认识的第一批汉字。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u1-pinyin-0002",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u1",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.002",
+      "difficulty": 1,
+      "stem": "选出汉字“水”的正确读音",
+      "options": [
+        { "id": "a", "text": "shuǐ" },
+        { "id": "b", "text": "suǐ" },
+        { "id": "c", "text": "shuí" },
+        { "id": "d", "text": "xuǐ" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“水”是翘舌音 sh",
+      "analysis": "“水”读 shuǐ，第三声，声母是翘舌音 sh。《金木水火土》里就有这个字。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u1-sim-0003",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u1",
+      "type": "similar_char",
+      "knowledgePointId": "cn.g1.zi.003",
+      "difficulty": 2,
+      "stem": "把正确的汉字拖到对应的空缺处，组成正确的词语",
+      "options": [
+        { "id": "t1", "text": "出＿" },
+        { "id": "t2", "text": "＿民" },
+        { "id": "a", "text": "入" },
+        { "id": "b", "text": "人" }
+      ],
+      "answer": { "pairs": [["t1", "a"], ["t2", "b"]] },
+      "hint": "“入”字的捺画要出头",
+      "analysis": "“入”捺画出头，如“出入”；“人”撇捺舒展不出头，如“人民”。两个字长得很像，要看仔细。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u4-pinyin-0004",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u4",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.004",
+      "difficulty": 1,
+      "stem": "选出词语“秋天”的正确读音",
+      "options": [
+        { "id": "a", "text": "qiū tiān" },
+        { "id": "b", "text": "qīu tiān" },
+        { "id": "c", "text": "qiū tān" },
+        { "id": "d", "text": "qiū tián" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "iu 的声调标在后面的 u 上",
+      "analysis": "“秋天”读 qiū tiān。iu 的声调标在后面的 u 上；“天”的韵母是 ian，不是 an。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u4-pinyin-0005",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u4",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.005",
+      "difficulty": 1,
+      "stem": "“小小的船”中“船”的正确读音是？",
+      "options": [
+        { "id": "a", "text": "chuán" },
+        { "id": "b", "text": "cuán" },
+        { "id": "c", "text": "chuáng" },
+        { "id": "d", "text": "qián" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“船”是翘舌音 ch",
+      "analysis": "“船”读 chuán，声母是翘舌音 ch，韵母是 uan。《小小的船》写的是弯弯的月儿像小船。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u5-poly-0006",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u5",
+      "type": "polyphone",
+      "knowledgePointId": "cn.g1.zi.006",
+      "difficulty": 2,
+      "stem": "“长大”中“长”的正确读音是？",
+      "options": [
+        { "id": "a", "text": "zhǎng" },
+        { "id": "b", "text": "cháng" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "表示生长时读 zhǎng",
+      "analysis": "“长大”的“长”读 zhǎng，是生长的意思；读 cháng 时表示长度，如“长短”。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u5-sim-0007",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u5",
+      "type": "similar_char",
+      "knowledgePointId": "cn.g1.zi.007",
+      "difficulty": 2,
+      "stem": "把正确的汉字拖到对应的空缺处，组成正确的词语",
+      "options": [
+        { "id": "t1", "text": "＿出" },
+        { "id": "t2", "text": "耳＿" },
+        { "id": "a", "text": "日" },
+        { "id": "b", "text": "目" }
+      ],
+      "answer": { "pairs": [["t1", "a"], ["t2", "b"]] },
+      "hint": "眼睛又叫“目”",
+      "analysis": "“日”指太阳，如“日出”；“目”指眼睛，如“耳目”。“日”字瘦长，“目”字里面是两横。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u4-match-0008",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u4",
+      "type": "word_match",
+      "knowledgePointId": "cn.g1.ci.001",
+      "difficulty": 2,
+      "stem": "把左右两边能搭配的词语连起来，组成恰当的词语搭配",
+      "options": [
+        { "id": "t1", "text": "弯弯的" },
+        { "id": "t2", "text": "小小的" },
+        { "id": "t3", "text": "闪闪的" },
+        { "id": "a", "text": "月儿" },
+        { "id": "b", "text": "船" },
+        { "id": "c", "text": "星星" },
+        { "id": "d", "text": "太阳" }
+      ],
+      "answer": { "pairs": [["t1", "a"], ["t2", "b"], ["t3", "c"]] },
+      "hint": "想想《小小的船》这篇课文",
+      "analysis": "课文《小小的船》写道：“弯弯的月儿小小的船”，“闪闪的星星蓝蓝的天”，搭配要符合课文。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u6-poem-0009",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u6",
+      "type": "poem_chain",
+      "knowledgePointId": "cn.g1.shi.001",
+      "difficulty": 1,
+      "stem": "古诗文接龙：“江南可采莲”的下一句是？",
+      "options": [
+        { "id": "a", "text": "莲叶何田田" },
+        { "id": "b", "text": "鱼戏莲叶间" },
+        { "id": "c", "text": "鱼戏莲叶东" },
+        { "id": "d", "text": "鱼戏莲叶西" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "先写莲叶茂盛的样子",
+      "analysis": "汉乐府《江南》：江南可采莲，莲叶何田田。鱼戏莲叶间。“何田田”形容莲叶茂盛的样子。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u1-poem-0010",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u1",
+      "type": "poem_chain",
+      "knowledgePointId": "cn.g1.shi.002",
+      "difficulty": 1,
+      "stem": "古诗文接龙：“鹅，鹅，鹅”的下一句是？",
+      "options": [
+        { "id": "a", "text": "曲项向天歌" },
+        { "id": "b", "text": "白毛浮绿水" },
+        { "id": "c", "text": "红掌拨清波" },
+        { "id": "d", "text": "粒粒皆辛苦" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "鹅弯着脖子朝天空唱歌",
+      "analysis": "骆宾王《咏鹅》：鹅，鹅，鹅，曲项向天歌。白毛浮绿水，红掌拨清波。“曲项”指弯着脖子。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u6-pinyin-0011",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u6",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.008",
+      "difficulty": 2,
+      "stem": "选出词语“影子”的正确读音",
+      "options": [
+        { "id": "a", "text": "yǐng zi" },
+        { "id": "b", "text": "yǐn zi" },
+        { "id": "c", "text": "yǐng zǐ" },
+        { "id": "d", "text": "yìng zi" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“影”是后鼻音 ing",
+      "analysis": "“影子”读 yǐng zi。“影”是后鼻音 ing、第三声；“子”在这个词里读轻声。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1a-u7-poly-0012",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "A",
+      "unit": "u7",
+      "type": "polyphone",
+      "knowledgePointId": "cn.g1.zi.009",
+      "difficulty": 2,
+      "stem": "“睡不着”中“着”的正确读音是？",
+      "options": [
+        { "id": "a", "text": "zháo" },
+        { "id": "b", "text": "zhe" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "表示入睡时读 zháo",
+      "analysis": "“睡不着”的“着”读 zháo，表示进入睡眠状态；读 zhe 时是助词，如“看着”。《明天要远足》里就有“睡不着”。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u1-pinyin-0013",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u1",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.010",
+      "difficulty": 1,
+      "stem": "选出汉字“春”的正确读音",
+      "options": [
+        { "id": "a", "text": "chūn" },
+        { "id": "b", "text": "cūn" },
+        { "id": "c", "text": "chōng" },
+        { "id": "d", "text": "qiū" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“春”是翘舌音 ch",
+      "analysis": "“春”读 chūn，声母是翘舌音 ch，韵母是 un。《春夏秋冬》是一年级下册的第一课。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u1-pinyin-0014",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u1",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.011",
+      "difficulty": 2,
+      "stem": "选出词语“姓氏”的正确读音",
+      "options": [
+        { "id": "a", "text": "xìng shì" },
+        { "id": "b", "text": "xìn shì" },
+        { "id": "c", "text": "xìng sì" },
+        { "id": "d", "text": "xìng shí" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“氏”是翘舌音 sh",
+      "analysis": "“姓氏”读 xìng shì。《姓氏歌》里介绍了“张、王、李、赵”等常见姓氏。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u1-sim-0015",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u1",
+      "type": "similar_char",
+      "knowledgePointId": "cn.g1.zi.012",
+      "difficulty": 2,
+      "stem": "把正确的汉字拖到对应的空缺处，组成正确的词语",
+      "options": [
+        { "id": "t1", "text": "＿蛙" },
+        { "id": "t2", "text": "＿水" },
+        { "id": "a", "text": "青" },
+        { "id": "b", "text": "清" }
+      ],
+      "answer": { "pairs": [["t1", "a"], ["t2", "b"]] },
+      "hint": "和水有关用三点水的“清”",
+      "analysis": "“青蛙”是一种绿色的小动物，用“青”；“清水”与水有关，用三点水的“清”。《小青蛙》教过这组字。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u2-pinyin-0016",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u2",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.013",
+      "difficulty": 2,
+      "stem": "选出汉字“忘”的正确读音",
+      "options": [
+        { "id": "a", "text": "wàng" },
+        { "id": "b", "text": "wán" },
+        { "id": "c", "text": "wǎng" },
+        { "id": "d", "text": "wáng" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“忘”是后鼻音 ang，读第四声",
+      "analysis": "“忘”读 wàng，第四声，是后鼻音 ang。《吃水不忘挖井人》告诉我们要懂得感恩。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u4-sim-0017",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u4",
+      "type": "similar_char",
+      "knowledgePointId": "cn.g1.zi.014",
+      "difficulty": 2,
+      "stem": "把正确的汉字拖到对应的空缺处，组成正确的词语",
+      "options": [
+        { "id": "t1", "text": "中＿" },
+        { "id": "t2", "text": "水＿" },
+        { "id": "a", "text": "午" },
+        { "id": "b", "text": "牛" }
+      ],
+      "answer": { "pairs": [["t1", "a"], ["t2", "b"]] },
+      "hint": "“牛”字的竖要出头",
+      "analysis": "“午”竖不出头，如“中午”；“牛”竖画出头，如“水牛”。端午节吃粽子，可别写成“端牛节”。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u6-poem-0018",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u6",
+      "type": "poem_chain",
+      "knowledgePointId": "cn.g1.shi.003",
+      "difficulty": 2,
+      "stem": "古诗文接龙：“小荷才露尖尖角”的下一句是？",
+      "options": [
+        { "id": "a", "text": "早有蜻蜓立上头" },
+        { "id": "b", "text": "接天莲叶无穷碧" },
+        { "id": "c", "text": "映日荷花别样红" },
+        { "id": "d", "text": "偷采白莲回" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "小蜻蜓停在了荷叶尖上",
+      "analysis": "杨万里《小池》：小荷才露尖尖角，早有蜻蜓立上头。这两句写初夏小池塘的景色。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u4-poem-0019",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u4",
+      "type": "poem_chain",
+      "knowledgePointId": "cn.g1.shi.004",
+      "difficulty": 1,
+      "stem": "古诗文接龙：“床前明月光”的下一句是？",
+      "options": [
+        { "id": "a", "text": "疑是地上霜" },
+        { "id": "b", "text": "举头望明月" },
+        { "id": "c", "text": "低头思故乡" },
+        { "id": "d", "text": "处处闻啼鸟" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "月光白白的，像地上的霜",
+      "analysis": "李白《静夜思》：床前明月光，疑是地上霜。举头望明月，低头思故乡。“疑”是好像的意思。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u2-poem-0020",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u2",
+      "type": "poem_chain",
+      "knowledgePointId": "cn.g1.shi.005",
+      "difficulty": 1,
+      "stem": "古诗文接龙：“春眠不觉晓”的下一句是？",
+      "options": [
+        { "id": "a", "text": "处处闻啼鸟" },
+        { "id": "b", "text": "夜来风雨声" },
+        { "id": "c", "text": "花落知多少" },
+        { "id": "d", "text": "言师采药去" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "天亮了，到处都能听到鸟叫",
+      "analysis": "孟浩然《春晓》：春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。“晓”指天亮。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u5-match-0021",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u5",
+      "type": "word_match",
+      "knowledgePointId": "cn.g1.ci.002",
+      "difficulty": 2,
+      "stem": "把左右两边能搭配的词语连起来，组成恰当的词语搭配",
+      "options": [
+        { "id": "t1", "text": "拍" },
+        { "id": "t2", "text": "踢" },
+        { "id": "t3", "text": "拔" },
+        { "id": "a", "text": "皮球" },
+        { "id": "b", "text": "足球" },
+        { "id": "c", "text": "河" },
+        { "id": "d", "text": "高" }
+      ],
+      "answer": { "pairs": [["t1", "a"], ["t2", "b"], ["t3", "c"]] },
+      "hint": "都是《操场上》里的体育活动",
+      "analysis": "《操场上》教我们动词搭配：拍皮球、踢足球、拔河。“拔”右边是“犮”，不要写成“拨”。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u8-pinyin-0022",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u8",
+      "type": "pinyin",
+      "knowledgePointId": "cn.g1.zi.015",
+      "difficulty": 2,
+      "stem": "选出词语“棉花”的正确读音",
+      "options": [
+        { "id": "a", "text": "mián hua" },
+        { "id": "b", "text": "mián huā" },
+        { "id": "c", "text": "mán hua" },
+        { "id": "d", "text": "mián huá" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "“花”在这个词里读轻声",
+      "analysis": "“棉花”读 mián hua，“花”在词尾读轻声。《棉花姑娘》里燕子、啄木鸟、青蛙都想来帮忙治病。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u3-poly-0023",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u3",
+      "type": "polyphone",
+      "knowledgePointId": "cn.g1.zi.016",
+      "difficulty": 2,
+      "stem": "“快乐”中“乐”的正确读音是？",
+      "options": [
+        { "id": "a", "text": "lè" },
+        { "id": "b", "text": "yuè" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "表示高兴时读 lè",
+      "analysis": "“快乐”的“乐”读 lè，表示高兴；读 yuè 时与音乐有关，如“音乐”。《怎么都快乐》教我们快乐有很多办法。",
+      "phase": 1
+    },
+    {
+      "id": "cn-g1b-u4-poem-0024",
+      "subject": "chinese",
+      "grade": 1,
+      "volume": "B",
+      "unit": "u4",
+      "type": "poem_chain",
+      "knowledgePointId": "cn.g1.shi.006",
+      "difficulty": 2,
+      "stem": "古诗文接龙：“松下问童子”的下一句是？",
+      "options": [
+        { "id": "a", "text": "言师采药去" },
+        { "id": "b", "text": "只在此山中" },
+        { "id": "c", "text": "云深不知处" },
+        { "id": "d", "text": "能开二月花" }
+      ],
+      "answer": { "choice": ["a"] },
+      "hint": "童子回答说师父去采药了",
+      "analysis": "贾岛《寻隐者不遇》：松下问童子，言师采药去。只在此山中，云深不知处。“言”是回答的意思。",
+      "phase": 1
+    }
+  ]
+}

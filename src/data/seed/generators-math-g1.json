@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generators": [
+    {
+      "id": "gen-math-g1-add-within10",
+      "knowledgePointId": "math.g1.add.within10",
+      "grade": 1,
+      "difficulty": 1,
+      "template": "{a} + {b} = ?",
+      "operands": {
+        "a": { "min": 0, "max": 10, "integer": true },
+        "b": { "min": 0, "max": 10, "integer": true }
+      },
+      "operation": "add",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 10,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g1-sub-within10",
+      "knowledgePointId": "math.g1.sub.within10",
+      "grade": 1,
+      "difficulty": 1,
+      "template": "{a} - {b} = ?",
+      "operands": {
+        "a": { "min": 1, "max": 10, "integer": true },
+        "b": { "min": 0, "max": 10, "integer": true }
+      },
+      "operation": "sub",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 10,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g1-add-within20",
+      "knowledgePointId": "math.g1.add.within20",
+      "grade": 1,
+      "difficulty": 2,
+      "template": "{a} + {b} = ?",
+      "operands": {
+        "a": { "min": 1, "max": 19, "integer": true },
+        "b": { "min": 1, "max": 19, "integer": true }
+      },
+      "operation": "add",
+      "constraints": {
+        "resultMin": 2,
+        "resultMax": 20,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g1-sub-within20",
+      "knowledgePointId": "math.g1.sub.within20",
+      "grade": 1,
+      "difficulty": 2,
+      "template": "{a} - {b} = ?",
+      "operands": {
+        "a": { "min": 2, "max": 20, "integer": true },
+        "b": { "min": 1, "max": 19, "integer": true }
+      },
+      "operation": "sub",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 19,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    }
+  ]
+}

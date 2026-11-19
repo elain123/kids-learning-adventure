@@ -33,13 +33,17 @@ const mastery: Record<string, MasteryRecord> = {
   },
 };
 
+// Wrong_Set v2 结构（multi-grade-mistake-book 任务 5.1：wrongSet 实体同键原地升级，
+// 元素含 subject/grade/wrongCount；v1 的 retriedCorrect 字段已随形状升级移除）
 const wrongSet: WrongSet = {
   items: [
     {
       questionRef: 'cn-g3-u1-dict-0001',
+      subject: 'chinese',
+      grade: 3,
       knowledgePointId: 'cn.g3.zi.001',
       wrongAt: 1719990000000,
-      retriedCorrect: false,
+      wrongCount: 1,
     },
   ],
 };

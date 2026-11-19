@@ -2,23 +2,40 @@
  * Local_Store 本地存储适配器
  *
  * 依据 .kiro/specs/kids-learning-adventure/design.md 的
- * "Data Models → localStorage 数据模型"、"Error Handling" 章节实现。
+ * "Data Models → localStorage 数据模型"、"Error Handling" 章节实现，
+ * 并按 .kiro/specs/multi-grade-mistake-book/design.md 扩充（任务 5.1）：
+ * - 新增 lastGrade（Last_Grade）与 session:subjects（学科年级分组合会话）
+ *   实体，沿用同一键命名空间、1 秒 schedule 落盘与备份自愈契约；
+ * - wrongSet 实体同键原地升级为 v2 结构（类型见 src/engine/wrongSet.ts）：
+ *   读取时在 JSON 解析成功后做形状检测，可识别 v1 形状（任一元素缺
+ *   wrongCount）经 migrateWrongSetV1 迁移、调度写回 v2 值后返回迁移结果
+ *   （multi-grade Req 6.6，优先于 Req 6.5 的备份重置路径）；仅当既非 v2
+ *   亦非可识别 v1 形状时才走既有备份自愈。迁移只读写 wrongSet 键，
+ *   其余实体读取行为与一期完全一致。
+ * 并按 .kiro/specs/child-grade-setting/design.md 扩充（任务 2.1）：
+ * - 新增 childGrade（Child_Grade，孩子年级）实体：number | null，初始态
+ *   null（未设置）；校验器 isChildGrade 接受 null 或 1-6 整数，其余值
+ *   走既有损坏备份自愈路径（备份后按未设置启动）；读写沿用同一键命名
+ *   空间、备份自愈、账号隔离与写失败上报契约。
  *
- * 契约（_Requirements: 10.1, 10.2, 10.3, 10.4, 10.6, 12.7, 13.5_）：
+ * 契约（_Requirements: 10.1, 10.2, 10.3, 10.4, 10.6, 12.7, 13.5；
+ * multi-grade-mistake-book 6.1-6.8；child-grade-setting 4.1, 4.3-4.6_）：
  * - 键命名空间：`kla:v1:{accountId}:{entity}`，一期 accountId 固定为 'default'，
- *   不同账号的数据完全隔离（Req 13.5）。
+ *   不同账号的数据完全隔离（Req 13.5 / multi-grade Req 6.7）。
  * - 读取：JSON 解析 + 各实体必需字段校验；失败时将原始值复制到
  *   `kla:v1:{accountId}:backup:{entity}:{timestamp}`（同一会话内不覆盖），
- *   并按该实体初始态启动（Req 10.4）。
+ *   并按该实体初始态启动（Req 10.4 / multi-grade Req 6.5）；键不存在时按
+ *   初始态启动且不创建备份（multi-grade Req 6.4）。
  * - 写入：数据变化后 1 秒内写入（schedule 延迟 WRITE_DELAY_MS < 1000ms，
  *   突发连续变化以首个未落盘变化起算计时）；写失败抛出 LocalStoreWriteError
- *   供 UI 提示"本次进度可能无法保存"（Req 10.2, 10.6）。
+ *   供 UI 提示"本次进度可能无法保存"（Req 10.2, 10.6 / multi-grade Req 6.2, 6.8）。
  * - 存储可注入：接受任意 StorageLike（默认 globalThis.localStorage），
  *   测试可注入内存 mock；模块不依赖 DOM。
  */
 
 import type {
   AnswerResult,
+  GeneratorParams,
   IslandCollection,
   MasteryRecord,
   QueueItem,
@@ -27,6 +44,24 @@ import type {
   Subject,
   TodaySession,
 } from '../types';
+import type { LastGrade } from '../engine/gradeSelector';
+import type { SubjectGradeKey } from '../engine/subjectSession';
+import type { WrongSet } from '../engine/wrongSet';
+import {
+  isLegacyV1WrongSetShape,
+  isWrongSetV2Shape,
+  migrateWrongSetV1,
+} from '../engine/wrongSetMigration';
+import type { QuestionIndex } from './questionBank';
+
+// Wrong_Set v2 类型再导出：既有模块（PracticePage、一期测试）从 localStore
+// 导入 WrongSet/WrongSetItem 的路径保持不变（multi-grade-mistake-book 任务 5.1）。
+export type {
+  FirstWrongEntry,
+  GeneratedSnapshot,
+  WrongSet,
+  WrongSetItem,
+} from '../engine/wrongSet';
 
 // ============ 存储抽象（可注入） ============
 
@@ -53,18 +88,11 @@ export function createMemoryStorage(): StorageLike {
 
 // ============ 实体模型 ============
 
-/** Wrong_Set 元素：questionRef 为题库题 id 或生成器签名（gen:{paramsId}:{operandsHash}） */
-export interface WrongSetItem {
-  questionRef: string;
-  knowledgePointId: string;
-  wrongAt: number;
-  retriedCorrect: boolean;
-}
-
-/** Wrong_Set */
-export interface WrongSet {
-  items: WrongSetItem[];
-}
+/**
+ * Wrong_Set 实体为 v2 结构（src/engine/wrongSet.ts，同键原地升级）：
+ * 元素含 questionRef/subject/grade/knowledgePointId/wrongAt/wrongCount 与
+ * 可选 generated 快照；类型经上方 export type 再导出。
+ */
 
 /** 口算历史最佳纪录条目 */
 export interface OralBestEntry {
@@ -93,6 +121,20 @@ export interface EntityTypeMap {
   oralBest: Record<string, OralBestEntry>;
   /** 设置 */
   settings: Settings;
+  /**
+   * Last_Grade：仅记录学生选择过年级的学科（multi-grade Req 6.1）；初始态 {}
+   */
+  lastGrade: LastGrade;
+  /**
+   * 学科年级分组合会话：Record<"{subject}:{grade}", TodaySession>
+   *（multi-grade Req 3.3）；初始态 {}
+   */
+  'session:subjects': Record<SubjectGradeKey, TodaySession>;
+  /**
+   * Child_Grade（孩子年级）：1-6 整数；null 表示未设置（初始态）
+   *（child-grade-setting Req 4.1）
+   */
+  childGrade: number | null;
 }
 
 /** 实体名（localStorage 键后缀） */
@@ -140,6 +182,9 @@ const INITIAL_STATE_FACTORIES: { [E in EntityName]: () => EntityTypeMap[E] } = {
   'session:today': () => null,
   oralBest: () => ({}),
   settings: () => ({ soundOn: true }),
+  lastGrade: () => ({}),
+  'session:subjects': () => ({}),
+  childGrade: () => null,
 };
 
 /** 返回某实体的初始状态（每次调用返回新对象，避免共享引用） */
@@ -205,18 +250,55 @@ function isMasteryMap(value: unknown): value is Record<string, MasteryRecord> {
   return isPlainObject(value) && Object.values(value).every(isMasteryRecord);
 }
 
-function isWrongSetItem(value: unknown): value is WrongSetItem {
-  return (
-    isPlainObject(value) &&
-    typeof value.questionRef === 'string' &&
-    typeof value.knowledgePointId === 'string' &&
-    isFiniteNumber(value.wrongAt) &&
-    typeof value.retriedCorrect === 'boolean'
+/** 合法年级：1-6 的整数（Last_Grade 值与组合会话键共用取值域） */
+function isGradeValue(value: unknown): value is number {
+  return Number.isInteger(value) && (value as number) >= 1 && (value as number) <= 6;
+}
+
+/**
+ * Wrong_Set v2 校验（multi-grade-mistake-book Req 6.6）：
+ * 必需字段 questionRef/subject/grade(1-6 整数)/knowledgePointId/wrongAt/wrongCount
+ * 齐全且合法；generated 快照可选，但存在时须结构合法。
+ *（形状判定复用迁移模块的 isWrongSetV2Shape，保证"读取校验"与"迁移出口"一致。）
+ */
+export function isWrongSetV2(value: unknown): value is WrongSet {
+  return isWrongSetV2Shape(value);
+}
+
+/**
+ * Last_Grade 校验（multi-grade-mistake-book Req 6.1）：
+ * 键限三个学科，值为 1-6 整数；{} 为合法初始态。
+ */
+export function isLastGrade(value: unknown): value is LastGrade {
+  if (!isPlainObject(value)) return false;
+  return Object.entries(value).every(
+    ([key, grade]) => SUBJECTS.includes(key as Subject) && isGradeValue(grade),
   );
 }
 
-function isWrongSet(value: unknown): value is WrongSet {
-  return isPlainObject(value) && Array.isArray(value.items) && value.items.every(isWrongSetItem);
+/**
+ * Child_Grade 校验（child-grade-setting Req 4.5）：
+ * null（未设置）或 1-6 整数；其余（非整数、越界、对象、字符串等）视为损坏，
+ * 走既有备份自愈路径（备份后按未设置启动）。
+ */
+export function isChildGrade(value: unknown): value is number | null {
+  return value === null || isGradeValue(value);
+}
+
+/** 组合会话键形状："{subject}:{grade}"，学科限三科、年级 1-6 */
+const SUBJECT_GRADE_KEY_RE = /^(chinese|math|english):[1-6]$/;
+
+/**
+ * 学科年级分组合会话校验（multi-grade-mistake-book Req 3.3）：
+ * 键符合 "{subject}:{grade}" 形状，值逐项过 isTodaySession。
+ */
+export function isSubjectSessionMap(
+  value: unknown,
+): value is Record<SubjectGradeKey, TodaySession> {
+  if (!isPlainObject(value)) return false;
+  return Object.entries(value).every(
+    ([key, session]) => SUBJECT_GRADE_KEY_RE.test(key) && isTodaySession(session),
+  );
 }
 
 function isWallet(value: unknown): value is StarWallet {
@@ -294,7 +376,7 @@ function isValidEntityValue(entity: EntityName, value: unknown): boolean {
     case 'mastery':
       return isMasteryMap(value);
     case 'wrongSet':
-      return isWrongSet(value);
+      return isWrongSetV2(value);
     case 'wallet':
       return isWallet(value);
     case 'collection':
@@ -306,6 +388,13 @@ function isValidEntityValue(entity: EntityName, value: unknown): boolean {
       return isOralBestMap(value);
     case 'settings':
       return isSettings(value);
+    case 'lastGrade':
+      return isLastGrade(value);
+    case 'session:subjects':
+      return isSubjectSessionMap(value);
+    case 'childGrade':
+      // null 表示未设置，是合法状态（同 session:today 先例）
+      return isChildGrade(value);
   }
 }
 
@@ -328,6 +417,16 @@ export interface LocalStoreOptions {
    * UI 据此提示"本次进度可能无法保存"（Req 10.6）。
    */
   onWriteError?: (error: LocalStoreWriteError) => void;
+  /**
+   * Wrong_Set v1→v2 迁移上下文（multi-grade-mistake-book Req 6.6）：
+   * v1 元素学科/年级推导顺序为 kpId 推导 → 题库 byId 查找 → 生成器参数
+   * 查找；缺省 bank=null、generators=[] 时仅 kpId 推导（无题库上下文的
+   * 构造点，如小岛/宝箱页的独立 store，属正常形态）。
+   */
+  wrongSetMigration?: {
+    bank: QuestionIndex | null;
+    generators: readonly GeneratorParams[];
+  };
 }
 
 export interface LocalStore {
@@ -339,6 +438,8 @@ export interface LocalStore {
   /**
    * 读取实体：JSON 解析 + 必需字段校验；
    * 损坏时原始值备份（会话内不覆盖）并返回初始态（Req 10.4）。
+   * wrongSet 例外：可识别 v1 形状经迁移升级并调度写回 v2 后返回
+   *（multi-grade Req 6.6，优先于备份重置），不做备份。
    */
   read<E extends EntityName>(entity: E): EntityTypeMap[E];
   /**
@@ -377,6 +478,9 @@ export function createLocalStore(options: LocalStoreOptions = {}): LocalStore {
   const clearTimeoutFn =
     options.clearTimeoutFn ?? ((handle: unknown) => clearTimeout(handle as Parameters<typeof clearTimeout>[0]));
   const onWriteError = options.onWriteError;
+  /** Wrong_Set v1→v2 迁移上下文：默认无题库上下文（仅 kpId 推导） */
+  const migrationBank = options.wrongSetMigration?.bank ?? null;
+  const migrationGenerators = options.wrongSetMigration?.generators ?? [];
 
   const prefix = `${STORAGE_PREFIX}:${accountId}`;
   /** 本会话已备份过的实体（同一会话内备份不被覆盖，Req 10.4） */
@@ -422,6 +526,17 @@ export function createLocalStore(options: LocalStoreOptions = {}): LocalStore {
       return initialEntityState(entity);
     }
     if (isValidEntityValue(entity, parsed)) return parsed as EntityTypeMap[E];
+
+    // Wrong_Set 同键原地升级（multi-grade-mistake-book Req 6.6，优先于
+    // Req 6.5 备份重置）：可识别 v1 形状（任一元素缺 wrongCount）→ 迁移并
+    // 调度写回 v2 值后返回迁移结果；不备份、不按初始态重置。
+    // 迁移只读写 wrongSet 键，其余实体一律落入下方既有备份自愈路径。
+    if (entity === 'wrongSet' && isLegacyV1WrongSetShape(parsed)) {
+      const { set } = migrateWrongSetV1(parsed, migrationBank, migrationGenerators);
+      schedule('wrongSet', set);
+      return set as EntityTypeMap[E];
+    }
+
     backupCorrupted(entity, raw);
     return initialEntityState(entity);
   }

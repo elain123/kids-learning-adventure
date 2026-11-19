@@ -8,7 +8,10 @@
  * - 启动时加载三科种子题库并经 2.1 校验器校验、构建索引（Req 9.3-9.6）；
  *   整体 fatal 时记入 bankError，练习流程入口据此停止（Req 9.5）；
  * - 持有响应式引用：wallet（Star_Wallet，变化 1 秒内刷新界面，Req 5.9）、
- *   session（Today_Session）、soundOn（音效开关，Req 12.5-12.7）；
+ *   session（Today_Session）、soundOn（音效开关，Req 12.5-12.7）、
+ *   childGrade（孩子年级，child-grade-setting Req 4.3，setChildGrade 立即落盘）；
+ *   startAdventure 仅在当日会话需要新生成的分支读取 childGrade 传入
+ *   buildTodayQueue 过滤（Req 2.9/3.2/3.5），当日已生成会话不读、不重建；
  * - startAdventure：今日冒险主流程编排——已有当日会话且未答完则续练、
  *   未生成则经 Review_Engine 生成并持久化、全部完成返回 done、无可出题
  *   返回 empty（Req 1.3、1.4、1.5、1.7、3.8）；
@@ -26,6 +29,20 @@ import chineseJson from '../data/seed/questions-chinese.json';
 import mathJson from '../data/seed/questions-math.json';
 import englishJson from '../data/seed/questions-english.json';
 import generatorsJson from '../data/seed/generators-math.json';
+import chineseG1Json from '../data/seed/questions-chinese-g1.json';
+import chineseG2Json from '../data/seed/questions-chinese-g2.json';
+import chineseG5Json from '../data/seed/questions-chinese-g5.json';
+import chineseG6Json from '../data/seed/questions-chinese-g6.json';
+import mathG1Json from '../data/seed/questions-math-g1.json';
+import mathG2Json from '../data/seed/questions-math-g2.json';
+import mathG5Json from '../data/seed/questions-math-g5.json';
+import mathG6Json from '../data/seed/questions-math-g6.json';
+import englishG5Json from '../data/seed/questions-english-g5.json';
+import englishG6Json from '../data/seed/questions-english-g6.json';
+import generatorsG1Json from '../data/seed/generators-math-g1.json';
+import generatorsG2Json from '../data/seed/generators-math-g2.json';
+import generatorsG5Json from '../data/seed/generators-math-g5.json';
+import generatorsG6Json from '../data/seed/generators-math-g6.json';
 
 import {
   buildQuestionIndex,
@@ -72,7 +89,9 @@ interface SeedBankOutcome {
 }
 
 /**
- * 加载三科种子题库并构建索引。
+ * 加载三科全部年级种子题库并构建索引（multi-grade-mistake-book Req 2.7）。
+ * 聚合既有三、四年级文件（内容不变，Req 2.4）与一至六年级扩充文件；
+ * 既有文件排在最前，保持一期"今日冒险"队列的确定性顺序不变。
  * 任一题库整体无法解析时返回 fatal（Req 9.5）；坏题由 loadQuestionBank
  * 逐题跳过并记错误日志（Req 9.4），此处只汇总合法题。
  */
@@ -81,6 +100,16 @@ function loadSeedBank(now: number): SeedBankOutcome {
     ['questions-chinese', chineseJson],
     ['questions-math', mathJson],
     ['questions-english', englishJson],
+    ['questions-chinese-g1', chineseG1Json],
+    ['questions-chinese-g2', chineseG2Json],
+    ['questions-chinese-g5', chineseG5Json],
+    ['questions-chinese-g6', chineseG6Json],
+    ['questions-math-g1', mathG1Json],
+    ['questions-math-g2', mathG2Json],
+    ['questions-math-g5', mathG5Json],
+    ['questions-math-g6', mathG6Json],
+    ['questions-english-g5', englishG5Json],
+    ['questions-english-g6', englishG6Json],
   ];
   const questions: Question[] = [];
   for (const [label, raw] of sources) {
@@ -110,7 +139,7 @@ function isGeneratorParams(value: unknown): value is GeneratorParams {
   );
 }
 
-/** 解析 generators-math.json 的 GeneratorParams 列表（非法条目跳过） */
+/** 解析 generators-math{,-gN}.json 的 GeneratorParams 列表（非法条目跳过） */
 function parseGenerators(raw: unknown): GeneratorParams[] {
   const list = (raw as { generators?: unknown } | null)?.generators;
   if (!Array.isArray(list)) return [];
@@ -181,26 +210,46 @@ export interface AppState {
   addStars(count: number): void;
   /** 设置音效开关（Req 12.5-12.7） */
   setSoundOn(on: boolean): void;
+  /** 孩子年级（响应式；null = 未设置）。启动时从 Local_Store 恢复（child-grade-setting Req 4.3） */
+  readonly childGrade: Ref<number | null>;
+  /**
+   * 设置孩子年级（1-6 整数；非法值防御性忽略）：
+   * 同步更新响应式引用并立即写入 Local_Store（Req 1.6、1.7、4.1、4.2）；
+   * 写失败汇入 writeError，内存态保持已选年级可见（Req 4.7）。
+   */
+  setChildGrade(grade: number): void;
 }
 
 /** 创建 App_State 实例（默认走 localStorage 与共享 Audio_Service） */
 export function createAppState(options: AppStateOptions = {}): AppState {
   const nowFn = options.now ?? (() => Date.now());
 
+  // 启动加载题库（Req 9.3）；整体 fatal 时停止进入练习流程（Req 9.5）。
+  // 先于 Local_Store 构造：题库索引与生成器参数同时作为
+  // Wrong_Set v1→v2 迁移上下文注入（multi-grade-mistake-book Req 6.6）。
+  const { bank, fatal } = loadSeedBank(nowFn());
+  const bankError = ref<string | null>(fatal);
+
+  // 口算生成器参数：聚合全部年级生成器文件（既有文件在前，Req 2.7；
+  // 种子结构由契约测试保证，非法条目防御性跳过）
+  const generators = [
+    generatorsJson,
+    generatorsG1Json,
+    generatorsG2Json,
+    generatorsG5Json,
+    generatorsG6Json,
+  ].flatMap(parseGenerators);
+
   const writeError = ref<string | null>(null);
   const store = createLocalStore({
     ...(options.storage !== undefined ? { storage: options.storage } : {}),
+    // v1 错题学科/年级推导：kpId 推导优先，题库 byId 与生成器参数兜底；
+    // bank 为 null（题库 fatal）时仅 kpId 推导
+    wrongSetMigration: { bank, generators },
     onWriteError: (error: LocalStoreWriteError) => {
       writeError.value = error.message;
     },
   });
-
-  // 启动加载题库（Req 9.3）；整体 fatal 时停止进入练习流程（Req 9.5）
-  const { bank, fatal } = loadSeedBank(nowFn());
-  const bankError = ref<string | null>(fatal);
-
-  // 口算生成器参数（种子结构由契约测试保证，非法条目防御性跳过）
-  const generators = parseGenerators(generatorsJson);
 
   // Feedback_Service：构造时经 Local_Store 恢复音效开关上次设置（Req 12.7）
   const feedback = createFeedbackService({
@@ -213,6 +262,8 @@ export function createAppState(options: AppStateOptions = {}): AppState {
   const wallet = ref<StarWallet>(store.read('wallet'));
   const session = ref<TodaySession | null>(store.read('session:today'));
   const soundOn = ref<boolean>(feedback.isSoundOn());
+  // 孩子年级：启动时从 Local_Store 恢复（Req 4.3；缺失/损坏经实体机制按未设置 null 返回）
+  const childGrade = ref<number | null>(store.read('childGrade'));
 
   /** 当日会话全部完成（Req 1.5）：会话属于今日且无下一未答题 */
   const todayDone = computed<boolean>(() => {
@@ -251,8 +302,17 @@ export function createAppState(options: AppStateOptions = {}): AppState {
       return { kind: 'done', session: current };
     }
 
-    // 当日会话尚未生成：依据 Mastery_Record 经 Review_Engine 生成（Req 1.4/3.8）
-    const queue = buildTodayQueue(store.read('mastery'), bank, now, SESSION_CONFIG, generators);
+    // 当日会话尚未生成：依据 Mastery_Record 经 Review_Engine 生成（Req 1.4/3.8）。
+    // 仅此生成分支读取 childGrade 并按其过滤（child-grade-setting Req 2.9/3.2/3.5）；
+    // 当日已生成会话走上方续练/done 分支，不读、不重建（Req 3.3/3.4）。
+    const queue = buildTodayQueue(
+      store.read('mastery'),
+      bank,
+      now,
+      SESSION_CONFIG,
+      generators,
+      store.read('childGrade')
+    );
     if (queue.length === 0) {
       // 无可用题：壳层提示并停留首页（Req 1.7）
       return { kind: 'empty' };
@@ -289,6 +349,23 @@ export function createAppState(options: AppStateOptions = {}): AppState {
     soundOn.value = feedback.isSoundOn();
   }
 
+  /**
+   * 设置孩子年级：非法值（非 1-6 整数）防御性忽略（UI 仅提供合法选项，
+   * 正常流程不可达）；合法时同步更新响应式引用并立即落盘
+   * （Req 1.6、1.7、4.1、4.2）；写失败捕获 LocalStoreWriteError 汇入
+   * writeError，内存态保持已选年级可见（Req 4.7）。
+   */
+  function setChildGrade(grade: number): void {
+    if (!Number.isInteger(grade) || grade < 1 || grade > 6) return;
+    childGrade.value = grade;
+    try {
+      store.write('childGrade', grade);
+    } catch (error) {
+      writeError.value =
+        error instanceof LocalStoreWriteError ? error.message : String(error);
+    }
+  }
+
   return {
     store,
     bank,
@@ -307,6 +384,8 @@ export function createAppState(options: AppStateOptions = {}): AppState {
     setWallet,
     addStars,
     setSoundOn,
+    childGrade,
+    setChildGrade,
   };
 }
 

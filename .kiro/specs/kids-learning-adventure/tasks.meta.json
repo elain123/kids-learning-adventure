@@ -5,8 +5,9 @@
       "lastRunTimestamp": 1794369214869
     },
     "2.2 编写属性测试：题库校验过滤与整体损坏": {
-      "status": "passed",
-      "lastRunTimestamp": 1794372760123
+      "status": "failed",
+      "failingExample": "Property 20: 题库校验过滤 failed after 9 tests (seed: -1267643857). Counterexample: [{\"kind\":\"valid\",\"raw\":{\"id\":\"!\",\"subject\":\"chinese\",\"grade\":1,\"volume\":\"A\",\"unit\":\"!\",\"type\":\"dictation\",\"knowledgePointId\":\"!\",\"difficulty\":1,\"stem\":\"!\",\"answer\":{\"pairs\":[[\"__proto__\",\"!\"],[\"!\",\"!\"]]},\"hint\":\"!\",\"analysis\":\"!\",\"phase\":1}}] — AssertionError: expected { pairs: { '!': '!' } } to deeply equal { pairs: { __proto__: '!', '!': '!' } } (loadQuestionBank 将 pairs 数组转为对象时丢失 \"__proto__\" 键；tests/property/questionBank.props.spec.ts:352)。该失败与 child-grade-setting 任务 6.1 的改动无关（随机种子下偶发），按 PBT 流程记录待后续处理。",
+      "lastRunTimestamp": 1795072591212
     },
     "3.2 编写属性测试：读写往返、多账号隔离与损坏自愈": {
       "status": "passed",

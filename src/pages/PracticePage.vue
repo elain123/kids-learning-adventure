@@ -297,12 +297,17 @@
  * 作答流程（Req 4.1-4.8、5.1、6.5、8.5）：
  * - 组件作答事件 → judge 本地判定（1 秒内）→ applyFirstAnswer/applyRetry 定盘；
  * - 首对：feedback.onCorrect 庆祝（≤3 秒）+ addStars 发星（Req 5.1/5.9）；
- * - 首错：feedback.onFirstWrong → Hint 条（不给答案）+ 待重试态（同一题重挂作答组件）；
- * - 重对：按答错记账（Req 4.3，掌握度 applyAnswer(false) + Wrong_Set），鼓励文案后推进；
+ * - 首错：feedback.onFirstWrong → Hint 条（不给答案）+ 待重试态（同一题重挂作答组件），
+ *   该题经 recordFirstWrong 去重记入 Wrong_Set（multi-grade Req 4.1-4.3）；
+ * - 重对：按答错记账（Req 4.3，掌握度 applyAnswer(false)；Wrong_Set 经
+ *   applyRetryToWrongSet 恒等不变，multi-grade Req 4.4/4.5），鼓励文案后推进；
  * - 重错：feedback.onSecondWrong → 答案 + ≤100 字解析 + 鼓励 + 下一题入口（Req 4.2）。
  *
- * 掌握度与错题本：每题定盘时恰好记账一次（首对/重对/重错）；答错 requeue 时
- * 按 Req 3.4 向当日队列尾追加 source='retry' 的队列项（若会话恰好已 done 则回到 active）。
+ * 掌握度与错题本：掌握度每题定盘时恰好记账一次（首对/重对/重错）；Wrong_Set 仅在
+ * 首错定盘入账（recordFirstWrong 去重，同一 questionRef 至多一条记录），重试定盘经
+ * applyRetryToWrongSet 恒等不追加（multi-grade-mistake-book 任务 5.2，修复一期同一题
+ * 重复入账）；答错 requeue 时按 Req 3.4 向当日队列尾追加 source='retry' 的队列项
+ *（若会话恰好已 done 则回到 active）。
  *
  * 计时与结算：
  * - 口算关展示 10 分钟倒计时（Req 7.4），到时自动结算：未作答不计入答对数，
@@ -313,10 +318,20 @@
  *   发放一次；重进已完成会话只展示不重复发放），口算关展示历史最佳对比与新纪录。
  *
  * 持久化口径（Req 2.4/10.2，变化后 1 秒内落盘）：
- * - 会话：appState.saveSession 立即写入（进度优先）；
+ * - 会话：saveFlowSession 立即写入（今日冒险写 session:today、学科年级写
+ *   session:subjects 组合键，进度优先）；
  * - mastery/wrongSet/oralBest：store.schedule 调度写入（800ms < 1s），
  *   离开页面前 store.flush 强制落盘；
  * - 中途退出/休息时将本段计时折入 elapsedMs 并重置段起点（重进后续走，Req 2.5/2.7）。
+ *
+ * 学科年级流程（multi-grade-mistake-book 任务 10.1，Req 1.3、3.1、3.3）：
+ * - 带 ?subject=&grade= 参数且组合合法：会话读写 session:subjects 对应组合键
+ *   （经 subjectGradeKey/saveSubjectSession，写入任一组合键时其余组合键的会话
+ *   逐值保持不变），题目解析仍走既有题库索引；中途退出/休息按组合键保存进度
+ *   （与一期 Req 2.4 同一机制）；
+ * - 年级不属于该学科可选范围（非法学科/年级组合）：回退到对应学科入口页
+ *   （学科本身非法时回首页），不进入练习、不回写任何会话；
+ * - 不带参数：今日冒险流程，读写 session:today，行为与一期完全一致。
  *
  * 难度下调展示说明：队列项题目在生成时已固定，difficultyOffset 无法改变既有题目，
  * 本页仅按 clampDifficulty 作信息展示（难度徽章与"已自动调低"标注），属信息性展示。
@@ -325,7 +340,7 @@
  *            7.4, 7.5, 7.6, 7.7, 7.8, 10.2
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import ChoicePad from '../components/question/ChoicePad.vue';
 import DictationCard from '../components/question/DictationCard.vue';
@@ -347,7 +362,18 @@ import { LEVEL_COMPLETION_STARS, awardLevelCompletion, updateOralBest } from '..
 import { judgeGenerated, judgeQuestion, type StudentAnswer } from '../engine/judge';
 import { generateOralQuestion } from '../engine/mathGenerator';
 import { pickEncouragement } from '../data/encouragement';
-import type { WrongSetItem } from '../data/localStore';
+import { kpIdGrade } from '../engine/kpId';
+import { gradeOptionsFor } from '../engine/gradeSelector';
+import {
+  saveSubjectSession,
+  subjectGradeKey,
+  type SubjectGradeKey,
+} from '../engine/subjectSession';
+import {
+  applyRetryToWrongSet,
+  recordFirstWrong,
+  type FirstWrongEntry,
+} from '../engine/wrongSet';
 import type {
   AnswerRevealEvent,
   CelebrationEvent,
@@ -366,12 +392,83 @@ import type {
 
 const appState = useAppState();
 const router = useRouter();
+const route = useRoute();
 
 // 共享响应式状态（App_State 为唯一状态源）
 const session = appState.session;
 const wallet = appState.wallet;
 const writeError = appState.writeError;
 const config = appState.sessionConfig;
+
+// ============ 学科年级流程参数（multi-grade-mistake-book 任务 10.1，Req 1.3、3.1、3.3） ============
+
+/** 解析 ?subject= 参数：非三学科取值视为未携带 */
+function parseSubjectParam(raw: unknown): Subject | null {
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  return v === 'chinese' || v === 'math' || v === 'english' ? v : null;
+}
+
+/** 解析 ?grade= 参数：非整数（如 "3.5"、"abc"）视为未携带 */
+function parseGradeParam(raw: unknown): number | null {
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  if (typeof v !== 'string') return null;
+  const n = Number(v);
+  return Number.isInteger(n) ? n : null;
+}
+
+const routeSubject = parseSubjectParam(route.query.subject);
+const routeGrade = parseGradeParam(route.query.grade);
+
+/** 不带参数：今日冒险流程（读写 session:today，行为与一期完全一致） */
+const isTodayFlow = routeSubject === null && routeGrade === null;
+
+/**
+ * 合法学科年级组合：两参数齐备且年级属于该学科可选范围（gradeOptionsFor）时，
+ * 进入学科年级流程，会话按组合键读写 session:subjects（Req 3.3）。
+ */
+const combo: { subject: Subject; grade: number; key: SubjectGradeKey } | null =
+  routeSubject !== null && routeGrade !== null && gradeOptionsFor(routeSubject).includes(routeGrade)
+    ? { subject: routeSubject, grade: routeGrade, key: subjectGradeKey(routeSubject, routeGrade) }
+    : null;
+
+/** 非法学科/年级组合：带了参数但未构成合法组合（回退学科入口页，不进入练习） */
+const invalidCombo = !isTodayFlow && combo === null;
+
+/**
+ * 流程回退目标：非法组合或无可用会话时的落地页——
+ * 学科可识别时回对应学科入口页（由其按组合键续练/重新生成/空年级提示），否则回首页。
+ */
+const fallbackPath = routeSubject !== null ? `/subject/${routeSubject}` : '/';
+
+/** 读取当前流程会话：今日冒险读 session:today；学科年级读 session:subjects 组合键 */
+function loadFlowSession(): TodaySession | null {
+  if (combo === null) return appState.store.read('session:today');
+  return appState.store.read('session:subjects')[combo.key] ?? null;
+}
+
+/**
+ * 保存当前流程会话（中途退出/休息/作答推进同一机制，对应一期 Req 2.4）：
+ * - 学科年级流程：经 saveSubjectSession 按组合键写入 session:subjects，
+ *   其余组合键的会话逐值保持不变（Req 3.3），写失败汇入 writeError 不阻断练习；
+ * - 今日冒险流程：走 appState.saveSession 写 session:today，与一期完全一致。
+ */
+function saveFlowSession(next: TodaySession): void {
+  if (combo === null) {
+    appState.saveSession(next);
+    return;
+  }
+  // 共享内存态同步当前会话，驱动本页全部展示与编排（写失败内存态仍推进，Req 6.8）
+  session.value = next;
+  try {
+    const all = appState.store.read('session:subjects');
+    appState.store.write(
+      'session:subjects',
+      saveSubjectSession(all, combo.key, next) as Record<SubjectGradeKey, TodaySession>,
+    );
+  } catch (error) {
+    writeError.value = error instanceof Error ? error.message : String(error);
+  }
+}
 
 /** 庆祝动画可见时长（≤ feedback 的 3 秒上限，Req 12.3） */
 const CELEBRATION_VISIBLE_MS = 1200;
@@ -658,7 +755,7 @@ watch(
   { immediate: true, flush: 'sync' },
 );
 
-// ============ 掌握度 / 错题本记账（每题定盘恰好一次） ============
+// ============ 掌握度 / 错题本记账（掌握度每题定盘恰好一次；Wrong_Set 仅首错入账） ============
 
 /** 应用掌握度状态机并调度写入（800ms < 1s 落盘，Req 10.2）；返回是否需当日重出 */
 function persistMastery(knowledgePointId: string, correct: boolean, now: number): boolean {
@@ -670,16 +767,47 @@ function persistMastery(knowledgePointId: string, correct: boolean, now: number)
   return requeue;
 }
 
-/** 追加错题本（重对与重错均入，retriedCorrect 区分，Req 4.3） */
-function appendWrongSet(
-  questionRef: string,
-  knowledgePointId: string,
-  wrongAt: number,
-  retriedCorrect: boolean,
-): void {
+/**
+ * 由当前题快照构造首错入账入参（multi-grade-mistake-book 任务 5.2）：
+ * - 题库题：questionRef 取题目 id，subject/grade/knowledgePointId 取自题目快照；
+ * - 口算生成题：questionRef 取生成器完整签名 gen:{paramsId}:{operandsHash}
+ *   （AnsweredSnapshot.ref，与一期错题引用同一口径），学科取队列项学科（math）、
+ *   年级取生成器参数 grade（kpId 年级段兜底），并携带 GeneratedSnapshot
+ *   （paramsId/stem/operands/answer），供错题集按原题还原重练。
+ */
+function buildFirstWrongEntry(snap: AnsweredSnapshot): FirstWrongEntry {
+  const { item, question, oral } = snap;
+  if (item.kind === 'bank') {
+    return {
+      questionRef: snap.ref,
+      subject: question?.subject ?? item.subject,
+      grade: question?.grade ?? kpIdGrade(item.knowledgePointId) ?? 3,
+      knowledgePointId: question?.knowledgePointId ?? item.knowledgePointId,
+    };
+  }
+  const params = appState.generators.find((g) => g.id === item.generatorParamsId);
+  return {
+    questionRef: snap.ref,
+    subject: item.subject,
+    grade: params?.grade ?? kpIdGrade(item.knowledgePointId) ?? 3,
+    knowledgePointId: item.knowledgePointId,
+    generated: {
+      paramsId: item.generatorParamsId ?? '',
+      stem: oral?.stem ?? '',
+      operands: oral?.operands ?? {},
+      answer: oral?.answer ?? 0,
+    },
+  };
+}
+
+/**
+ * 首错入账（multi-grade-mistake-book Req 4.1-4.3）：recordFirstWrong 去重入账——
+ * 同一 questionRef 至多一条记录，重复首错仅更新 wrongAt=now、wrongCount+1，
+ * 不新增记录；经 schedule 调度写入（800ms < 1s 落盘，Req 10.2 / multi-grade Req 6.2）。
+ */
+function persistFirstWrong(snap: AnsweredSnapshot, now: number): void {
   const wrongSet = appState.store.read('wrongSet');
-  const item: WrongSetItem = { questionRef, knowledgePointId, wrongAt, retriedCorrect };
-  appState.store.schedule('wrongSet', { items: [...wrongSet.items, item] });
+  appState.store.schedule('wrongSet', recordFirstWrong(wrongSet, buildFirstWrongEntry(snap), now));
 }
 
 // ============ 作答判定入口（组件事件 → judge → 引擎定盘） ============
@@ -764,14 +892,16 @@ function resolveAnswer(correct: boolean): void {
     if (correct) {
       // 首对：掌握度按答对更新（首对 requeue 恒 false）、发星、庆祝（Req 5.1/12.3）
       persistMastery(item.knowledgePointId, true, now);
-      appState.saveSession(outcome.session);
+      saveFlowSession(outcome.session);
       appState.addStars(outcome.stars);
       celebration.value = appState.feedback.onCorrect();
       appState.feedback.onStars(outcome.stars);
       scheduleProceed(CELEBRATION_VISIBLE_MS);
     } else {
-      // 首错：保存计数转移（streak 归零/连错+1），Hint 条不给答案，进入待重试（Req 4.1）
-      appState.saveSession(outcome.session);
+      // 首错：错题按首错规则去重入账（multi-grade-mistake-book Req 4.1-4.3，任务 5.2）；
+      // 保存计数转移（streak 归零/连错+1），Hint 条不给答案，进入待重试（Req 4.1）
+      persistFirstWrong(answeredSnapshot.value, now);
+      saveFlowSession(outcome.session);
       const q = answeredSnapshot.value.question;
       hintEvent.value = appState.feedback.onFirstWrong(q ?? { hint: GENERATED_HINT });
       pendingRetry.value = true;
@@ -798,8 +928,13 @@ function resolveAnswer(correct: boolean): void {
     };
   }
   const snap = answeredSnapshot.value;
-  appendWrongSet(snap.ref, item.knowledgePointId, now, correct);
-  appState.saveSession(next);
+  // 重试定盘（重对与重错）改调 applyRetryToWrongSet（multi-grade-mistake-book
+  // Req 4.4/4.5，任务 5.2）：对当前 Wrong_Set 恒等返回——不修改任何记录的
+  // wrongAt 与 wrongCount、不追加记录、答对也不移除；集合无任何变化，故无需
+  // 调度落盘（也避免覆盖首错入账的调度待写值）。修复一期 appendWrongSet
+  // 同一题被重复添加的问题。
+  void applyRetryToWrongSet(appState.store.read('wrongSet'), snap.ref, correct);
+  saveFlowSession(next);
 
   if (correct) {
     // 重对：鼓励文案（无星星，本题按答错记账）后推进
@@ -868,7 +1003,7 @@ function skipUnrenderable(): void {
   const s = session.value;
   if (!s) return;
   const nextIndex = s.currentIndex + 1;
-  appState.saveSession({
+  saveFlowSession({
     ...s,
     currentIndex: nextIndex,
     status: nextIndex >= s.queue.length ? 'done' : s.status,
@@ -938,7 +1073,7 @@ function onTick(): void {
     hintEvent.value = null;
     const nextIndex = s.currentIndex + 1;
     const done = nextIndex >= s.queue.length;
-    appState.saveSession({
+    saveFlowSession({
       ...s,
       currentIndex: nextIndex,
       status: done ? 'done' : 'active',
@@ -966,7 +1101,7 @@ function onGroupContinue(): void {
 function onTimeupContinue(): void {
   const s = session.value;
   if (s) {
-    appState.saveSession({ ...s, elapsedMs: 0, levelStartedAt: Date.now() });
+    saveFlowSession({ ...s, elapsedMs: 0, levelStartedAt: Date.now() });
   }
   overlay.value = null;
   timeupOralView.value = null;
@@ -985,9 +1120,10 @@ function onTimeupContinue(): void {
 
 /** 将本段计时折入 elapsedMs 并重置段起点（退出/休息/卸载时冻结关卡时钟） */
 function persistClockSegment(): void {
+  if (invalidCombo) return; // 非法组合已回退，不回写任何会话
   const s = session.value;
   if (!s) return;
-  appState.saveSession({
+  saveFlowSession({
     ...s,
     elapsedMs: elapsedMs(s, Date.now()),
     levelStartedAt: Date.now(),
@@ -1065,17 +1201,28 @@ function formatRevealAnswer(evt: AnswerRevealEvent): string {
 
 // ============ 挂载 / 卸载：恢复进度、计时与落盘 ============
 
-// 首次渲染前同步今日会话：appState.session 是跨页面共享的内存态，可能残留
-// 上一个学科的旧会话；若待 onMounted 才刷新，首帧会按旧会话挂载旧题型卡并
+// 首次渲染前同步当前流程会话：appState.session 是跨页面共享的内存态，可能残留
+// 上一页面的旧会话；若待 onMounted 才刷新，首帧会按旧会话挂载旧题型卡并
 // 自动播音，切换会话后新卡片再播音，形成跨学科音频叠加。
-appState.refreshSession();
+// 今日冒险流程刷新 session:today（与一期一致）；学科年级流程刷新
+// session:subjects 组合键会话；非法组合不触碰任何会话（立即回退）。
+if (invalidCombo) {
+  // 非法学科/年级组合：回退到对应学科入口页（学科本身非法时回首页）
+  void router.replace(fallbackPath);
+} else if (combo !== null) {
+  session.value = loadFlowSession();
+} else {
+  appState.refreshSession();
+}
 
 onMounted(() => {
+  if (invalidCombo) return; // 非法组合已回退，不进入任何练习流程
   // 重进时从 Local_Store 恢复进度，下一未答题为续练起点（Req 2.5/2.7）
-  const s = appState.session.value;
+  const s = session.value;
   if (s === null || s.date !== localDateString(Date.now())) {
-    // 无当日会话或会话跨日：回首页经"今日冒险"重新生成（Req 3.8/3.9）
-    void router.replace('/');
+    // 无当日会话或会话跨日：今日冒险回首页经"今日冒险"重新生成（Req 3.8/3.9）；
+    // 学科年级流程回对应学科入口页，由其按组合键续练/重新生成/空年级提示（Req 3.4）
+    void router.replace(fallbackPath);
     return;
   }
   // 已完成会话直接进入关卡结算展示，不重复发放 +10（Req 5.2）

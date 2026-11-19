@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generators": [
+    {
+      "id": "gen-math-g2-add-within100",
+      "knowledgePointId": "math.g2.add.within100",
+      "grade": 2,
+      "difficulty": 2,
+      "template": "{a} + {b} = ?",
+      "operands": {
+        "a": { "min": 10, "max": 99, "integer": true },
+        "b": { "min": 1, "max": 99, "integer": true }
+      },
+      "operation": "add",
+      "constraints": {
+        "resultMin": 11,
+        "resultMax": 100,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g2-sub-within100",
+      "knowledgePointId": "math.g2.sub.within100",
+      "grade": 2,
+      "difficulty": 2,
+      "template": "{a} - {b} = ?",
+      "operands": {
+        "a": { "min": 11, "max": 100, "integer": true },
+        "b": { "min": 1, "max": 99, "integer": true }
+      },
+      "operation": "sub",
+      "constraints": {
+        "resultMin": 0,
+        "resultMax": 99,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g2-mul-table",
+      "knowledgePointId": "math.g2.mul.table",
+      "grade": 2,
+      "difficulty": 1,
+      "template": "{a} × {b} = ?",
+      "operands": {
+        "a": { "min": 2, "max": 9, "integer": true },
+        "b": { "min": 1, "max": 9, "integer": true }
+      },
+      "operation": "mul",
+      "constraints": {
+        "resultMin": 2,
+        "resultMax": 81,
+        "divisible": false,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    },
+    {
+      "id": "gen-math-g2-div-table",
+      "knowledgePointId": "math.g2.div.table",
+      "grade": 2,
+      "difficulty": 2,
+      "template": "{a} ÷ {b} = ?",
+      "operands": {
+        "a": { "min": 2, "max": 81, "integer": true },
+        "b": { "min": 1, "max": 9, "integer": true }
+      },
+      "operation": "div",
+      "constraints": {
+        "resultMin": 1,
+        "resultMax": 9,
+        "divisible": true,
+        "decimalPlaces": 0
+      },
+      "answerFormat": "number"
+    }
+  ]
+}

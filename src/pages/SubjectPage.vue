@@ -1,20 +1,33 @@
 <!--
-  学科入口页（/subject/:id，id ∈ chinese | math | english）
+  学科入口页 + Grade_Selector（/subject/:id，id ∈ chinese | math | english）
 
-  契约（_Requirements: 13.1, 13.2, 13.6_）：
-  - 语文大陆 / 数学王国 / 英语岛三个主题入口，各配独立卡通形象与主题配色（Req 13.1、12.1）；
-  - 展示该学科今日进度：由 Local_Store 中的今日会话（Today_Session）推导"已答 X / Y 题"；
-    尚无今日会话时按当前掌握度预生成该学科今日队列，展示"今天为你准备了 Y 道趣味题目"（不落盘）；
-  - "开始冒险"大按钮由"今日冒险"同一机制驱动对应学科会话（Req 13.2）：
-      · 今日已存在该学科会话（队列全部属于本学科）→ 沿用并续玩，不重生成；
-      · 否则以按学科过滤的题库索引调用 Review_Engine.buildTodayQueue 生成新会话
-        （复习题在前、新知识点题在后，与首页"今日冒险"同一条生成管线），
-        createTodaySession 建会话后写入 Local_Store，再直接进入 /practice；
-    全程不提供难度 / 年级 / 单元等任何科目外前置选择；
-  - 今日该学科会话已完成时展示完成庆祝画面，不再进入练习（与 Req 1.5 首页口径一致）；
-  - 页面不出现任何二期功能入口（无阅读理解 / 跟读评分 / 多步骤应用题 / 家长报告 / 多账号，Req 13.6）；
+  契约（multi-grade-mistake-book _Requirements: 1.1-1.6, 3.1, 3.3, 3.4_）：
+  - 语文大陆 / 数学王国 / 英语岛三个主题入口，各配独立卡通形象与主题配色
+    （一期 Req 13.1、12.1 保留），星星余额展示与首页一致；
+  - 英雄区下方展示年级网格：语文/数学按一年级至六年级升序共 6 个年级按钮，
+    英语按三年级至六年级升序共 4 个（外研版三年级起点，不展示一、二年级，
+    Req 1.1、1.2）；每个年级按钮触控区域 ≥44×44px（Req 1.4）；
+  - 读取 Local_Store 的 Last_Grade 实体，经 markedGrade 计算标记：该学科
+    Last_Grade 对应按钮显示"上次 ⭐"标记与差异化配色，其余按钮样式一致，
+    至多标记一个（Req 1.5）；从未选择过年级时全部按钮样式一致、无任何标记
+    （Req 1.6）；
+  - 点击年级按钮即进入该学科该年级练习（Req 1.3：除年级外无任何前置选择，
+    不再有独立的"开始冒险"按钮）：
+      a. 先经 schedule 写入 Last_Grade（1 秒内落盘，Req 6.2）；
+      b. 读取 session:subjects["{subject}:{grade}"] 组合会话；
+      c. 今日该组合会话已完成 → 展示完成庆祝画面，不进入练习（Req 1.5 口径）；
+      d. 今日该组合会话有未答题 → 导航 /practice?subject={s}&grade={g} 续练；
+      e. 否则经 filterBankForGrade + filterGeneratorsForGrade 过滤后调用既有
+         buildTodayQueue 生成新会话（队列中每道题学科与年级均等于所选值，
+         Req 3.1），createTodaySession 建会话后按组合键写入 session:subjects
+         （其余组合键逐值不变，Req 3.3），再导航 /practice?subject={s}&grade={g}；
+      f. 生成队列为空（该年级无可用题）→ 提示"该年级暂无可用题目"并停留在
+         Grade_Selector，不进入练习界面（Req 3.4）；
+  - 首页"今日冒险"入口及其 session:today 流程不在本页改动范围（Req 1.7）；
+  - 题库整体加载失败 → fatal 提示并停止进入练习流程（一期 Req 9.5 保留）；
   - 非法学科 id 显示"迷路"提示并可返回首页；
-  - 全部可点击元素触控区域 ≥ 44×44px（Req 12.2），星星余额展示与首页一致。
+  - 页面不出现任何二期功能入口（无阅读理解 / 跟读评分 / 多步骤应用题 /
+    家长报告 / 多账号，一期 Req 13.6 保留）。
 -->
 <template>
   <!-- 合法学科页 -->
@@ -34,54 +47,46 @@
       <p class="slogan">{{ theme.slogan }}</p>
 
       <!-- 题库整体加载失败：停止进入练习流程（Req 9.5） -->
-      <section v-if="bankFatal" class="progress-card error-card" data-testid="bank-error">
+      <section v-if="bankFatal" class="grade-card error-card" data-testid="bank-error">
         <div class="card-emoji" aria-hidden="true">😵</div>
         <h2 class="card-title">题库加载失败</h2>
         <p class="card-text">题目们迷路了，请稍后再回来看看吧！</p>
       </section>
 
-      <!-- 今日进度卡片 -->
-      <section v-else-if="progress" class="progress-card" data-testid="today-progress">
-        <h2 class="card-title">📅 今日进度</h2>
-
-        <template v-if="progress.total > 0">
-          <p v-if="progress.planned" class="card-text">
-            今天为你准备了 <strong>{{ progress.total }}</strong> 道趣味题目！
-          </p>
-          <p v-else class="card-text">
-            已答 <strong>{{ progress.answered }}</strong> / {{ progress.total }} 题
-          </p>
-          <div class="progress-track" role="progressbar" :aria-valuenow="progressPercent" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-fill" :style="{ width: `${progressPercent}%` }"></div>
-          </div>
-          <p v-if="progress.done" class="done-badge" data-testid="done-badge">🎉 今日冒险已完成！</p>
-        </template>
-
-        <p v-else class="card-text" data-testid="empty-today">
-          今天的题目都练完啦，去别的地方看看吧！
-        </p>
+      <!-- Grade_Selector：年级网格（Req 1.1、1.2；触控区域 ≥44×44px，Req 1.4） -->
+      <section v-else class="grade-card" data-testid="grade-selector">
+        <h2 class="card-title">🎒 选择你的年级</h2>
+        <div class="grade-grid">
+          <button
+            v-for="grade in gradeOptions"
+            :key="grade"
+            type="button"
+            class="grade-btn"
+            :class="{ 'grade-btn--marked': grade === marked }"
+            :data-grade="grade"
+            data-testid="grade-option"
+            @click="onSelectGrade(grade)"
+          >
+            <span class="grade-btn__label">{{ grade }}年级</span>
+            <span
+              v-if="grade === marked"
+              class="grade-btn__mark"
+              data-testid="last-grade-mark"
+            >上次 ⭐</span>
+          </button>
+        </div>
       </section>
 
-      <!-- 开始冒险大按钮：唯一练习入口，无任何前置选择（Req 13.2） -->
-      <button
-        v-if="!bankFatal && progress && progress.total > 0"
-        type="button"
-        class="start-btn"
-        data-testid="start-adventure"
-        @click="onStart"
-      >
-        {{ startLabel }}
-      </button>
-
-      <p v-if="emptyNotice" class="notice" data-testid="empty-notice">
-        今天没有可以冒险的题目，去别的主题看看吧！
+      <!-- 该年级无可用题：停留 Grade_Selector，不进入练习（Req 3.4） -->
+      <p v-if="emptyGradeNotice" class="notice" data-testid="empty-grade-notice">
+        该年级暂无可用题目
       </p>
       <p v-if="writeWarning" class="notice" data-testid="write-warning">
         本次进度可能无法保存
       </p>
     </main>
 
-    <!-- 完成庆祝弹层：今日该学科会话已完成时点击按钮展示（Req 1.5 口径） -->
+    <!-- 完成庆祝弹层：今日该学科该年级会话已完成时点击年级按钮展示（Req 1.5 口径） -->
     <div v-if="showCelebration" class="overlay" data-testid="celebration" @click.self="showCelebration = false">
       <div class="celebration-card">
         <div class="cele-mascot" aria-hidden="true">{{ theme.mascot }}</div>
@@ -114,23 +119,42 @@ import chineseJson from '../data/seed/questions-chinese.json';
 import mathJson from '../data/seed/questions-math.json';
 import englishJson from '../data/seed/questions-english.json';
 import generatorsJson from '../data/seed/generators-math.json';
+import chineseG1Json from '../data/seed/questions-chinese-g1.json';
+import chineseG2Json from '../data/seed/questions-chinese-g2.json';
+import chineseG5Json from '../data/seed/questions-chinese-g5.json';
+import chineseG6Json from '../data/seed/questions-chinese-g6.json';
+import mathG1Json from '../data/seed/questions-math-g1.json';
+import mathG2Json from '../data/seed/questions-math-g2.json';
+import mathG5Json from '../data/seed/questions-math-g5.json';
+import mathG6Json from '../data/seed/questions-math-g6.json';
+import englishG5Json from '../data/seed/questions-english-g5.json';
+import englishG6Json from '../data/seed/questions-english-g6.json';
+import generatorsG1Json from '../data/seed/generators-math-g1.json';
+import generatorsG2Json from '../data/seed/generators-math-g2.json';
+import generatorsG5Json from '../data/seed/generators-math-g5.json';
+import generatorsG6Json from '../data/seed/generators-math-g6.json';
 
 import {
   buildQuestionIndex,
+  filterBankForGrade,
+  filterGeneratorsForGrade,
   loadQuestionBank,
   type QuestionIndex,
 } from '../data/questionBank';
 import { createLocalStore } from '../data/localStore';
 import { buildTodayQueue, shouldGenerateTodayQueue } from '../engine/reviewEngine';
-import { createTodaySession } from '../engine/adventureEngine';
+import { createTodaySession, nextUnanswered } from '../engine/adventureEngine';
+import { gradeOptionsFor, markedGrade, type LastGrade } from '../engine/gradeSelector';
+import { saveSubjectSession, subjectGradeKey, type SubjectGradeKey } from '../engine/subjectSession';
 import type {
   GeneratorParams,
   QueueItem,
   SessionConfig,
   Subject,
+  TodaySession,
 } from '../types';
 
-// ============ 主题定义：三学科卡通形象与配色（Req 13.1、12.1） ============
+// ============ 主题定义：三学科卡通形象与配色（一期 Req 13.1、12.1，保留不变） ============
 
 interface SubjectTheme {
   id: Subject;
@@ -181,7 +205,7 @@ const SUBJECT_SESSION_CONFIG: SessionConfig = {
   maxReviewPerSession: 12,
 };
 
-// ============ 题库加载（启动校验，坏题跳过；整体损坏则 fatal，Req 9.3-9.5） ============
+// ============ 题库加载（启动校验，坏题跳过；整体损坏则 fatal，一期 Req 9.3-9.5 保留） ============
 
 interface BankLoad {
   index: QuestionIndex | null;
@@ -192,10 +216,22 @@ let bankCache: BankLoad | null = null;
 
 function getBank(): BankLoad {
   if (bankCache !== null) return bankCache;
+  // 聚合全部年级种子文件（既有三、四年级文件在前且内容不变，Req 2.4/2.7），
+  // 保持一期学科队列的确定性顺序不变
   const questions = [
     ...chineseJson.questions,
     ...mathJson.questions,
     ...englishJson.questions,
+    ...chineseG1Json.questions,
+    ...chineseG2Json.questions,
+    ...chineseG5Json.questions,
+    ...chineseG6Json.questions,
+    ...mathG1Json.questions,
+    ...mathG2Json.questions,
+    ...mathG5Json.questions,
+    ...mathG6Json.questions,
+    ...englishG5Json.questions,
+    ...englishG6Json.questions,
   ];
   const result = loadQuestionBank(JSON.stringify({ version: 1, questions }));
   bankCache =
@@ -205,13 +241,14 @@ function getBank(): BankLoad {
   return bankCache;
 }
 
-/** 全部口算生成器参数（仅数学学科使用，种子 JSON 结构经校验器约束） */
-const ALL_GENERATORS = generatorsJson.generators as unknown as GeneratorParams[];
-
-/** 按学科过滤题库索引：学科会话只从本学科知识点出题（Req 13.2） */
-function filterIndexBySubject(index: QuestionIndex, subjectId: Subject): QuestionIndex {
-  return buildQuestionIndex(index.all.filter((q) => q.subject === subjectId));
-}
+/** 全部口算生成器参数（仅数学学科使用，聚合各年级生成器文件，种子 JSON 结构经校验器约束） */
+const ALL_GENERATORS = [
+  ...generatorsJson.generators,
+  ...generatorsG1Json.generators,
+  ...generatorsG2Json.generators,
+  ...generatorsG5Json.generators,
+  ...generatorsG6Json.generators,
+] as unknown as GeneratorParams[];
 
 // ============ 页面状态 ============
 
@@ -220,7 +257,7 @@ const router = useRouter();
 
 const store = createLocalStore({
   onWriteError: () => {
-    // Req 10.6：调度写失败时提示，内存态继续可用
+    // Req 6.8（一期 Req 10.6 同口径）：调度写失败时提示，内存态继续可用
     writeWarning.value = true;
   },
 });
@@ -228,18 +265,11 @@ const store = createLocalStore({
 const bank = getBank();
 const bankFatal = bank.fatal;
 
-/** 学科今日进度（由今日会话推导；planned=true 表示尚无会话、为预生成预览） */
-interface SubjectProgress {
-  answered: number;
-  total: number;
-  done: boolean;
-  planned: boolean;
-}
-
-const progress = ref<SubjectProgress | null>(null);
 const starBalance = ref(0);
+/** 本设备各学科 Last_Grade（Local_Store lastGrade 实体的内存镜像） */
+const lastGrade = ref<LastGrade>({});
 const showCelebration = ref(false);
-const emptyNotice = ref(false);
+const emptyGradeNotice = ref(false);
 const writeWarning = ref(false);
 
 function resolveSubjectId(raw: unknown): Subject | null {
@@ -252,125 +282,112 @@ const theme = computed<SubjectTheme | null>(() =>
   subjectId.value === null ? null : THEMES[subjectId.value],
 );
 
+/** 本学科可选年级（升序）：语文/数学 6 个、英语 4 个（Req 1.1、1.2） */
+const gradeOptions = computed<readonly number[]>(() =>
+  subjectId.value === null ? [] : gradeOptionsFor(subjectId.value),
+);
+
 /**
- * 生成该学科今日队列：与首页"今日冒险"同一条 Review_Engine 生成管线，
- * 仅将题库索引与口算生成器按学科过滤，保证复习题在前、新知识点题在后、
- * 到点判定与上限语义一致（Req 13.2）。
+ * 应标记"上次 ⭐"的年级：该学科 Last_Grade 属于本学科可选年级时返回该年级，
+ * 否则为 null（不显示任何标记）；任意形态下至多标记一个按钮（Req 1.5、1.6）。
  */
-function buildSubjectQueue(subject: Subject, now: number): QueueItem[] {
-  if (bank.index === null) return [];
-  const subjectIndex = filterIndexBySubject(bank.index, subject);
-  const subjectGenerators = subject === 'math' ? ALL_GENERATORS : [];
-  const mastery = store.read('mastery');
-  return buildTodayQueue(mastery, subjectIndex, now, SUBJECT_SESSION_CONFIG, subjectGenerators);
-}
+const marked = computed<number | null>(() =>
+  subjectId.value === null ? null : markedGrade(lastGrade.value, subjectId.value),
+);
 
-/** 刷新星星余额与今日进度展示 */
+/** 刷新星星余额与 Last_Grade 展示 */
 function refresh(): void {
-  const current = subjectId.value;
   starBalance.value = store.read('wallet').balance;
-  if (current === null || bankFatal !== null) {
-    progress.value = null;
-    return;
-  }
-  const now = Date.now();
-  const existing = store.read('session:today');
-  if (existing !== null && !shouldGenerateTodayQueue(existing, now)) {
-    // 今日已有会话：全部属于本学科 → 直接推导；混合队列 → 取本学科部分
-    const scoped = existing.queue.every((q) => q.subject === current);
-    const subjectItems = scoped
-      ? existing.queue
-      : existing.queue.filter((q) => q.subject === current);
-    if (subjectItems.length > 0) {
-      const answeredCount = scoped
-        ? Math.min(existing.currentIndex, existing.queue.length)
-        : existing.queue.slice(0, existing.currentIndex).filter((q) => q.subject === current)
-            .length;
-      progress.value = {
-        answered: answeredCount,
-        total: subjectItems.length,
-        done:
-          existing.status === 'done' ||
-          (subjectItems.length > 0 && answeredCount >= subjectItems.length),
-        planned: false,
-      };
-      return;
-    }
-  }
-  // 尚无今日会话（或会话不含本学科题目）：预生成预览，不写盘
-  const planned = buildSubjectQueue(current, now);
-  progress.value = { answered: 0, total: planned.length, done: false, planned: true };
+  lastGrade.value = store.read('lastGrade');
+  emptyGradeNotice.value = false;
 }
 
-// 同一组件实例在 /subject/:id 间切换时重算进度；首次挂载立即刷新
+// 同一组件实例在 /subject/:id 间切换时重算展示；首次挂载立即刷新
 watch(subjectId, refresh, { immediate: true });
 
-const progressPercent = computed(() => {
-  const p = progress.value;
-  if (p === null || p.total <= 0) return 0;
-  return Math.min(100, Math.round((p.answered / p.total) * 100));
-});
-
-const startLabel = computed(() => {
-  const p = progress.value;
-  if (p !== null && p.done) return '已完成 🎉';
-  if (p !== null && !p.planned && p.answered > 0) return '继续冒险 🚀';
-  return '开始冒险 🚀';
-});
+/**
+ * 生成该学科该年级今日队列：与首页"今日冒险"同一条 Review_Engine 生成管线，
+ * 仅将题库索引与口算生成器按学科+年级过滤，保证队列中每道题目的学科属性与
+ * 年级属性均等于学生所选学科与年级（Req 3.1）；该年级无可用题时返回空队列。
+ */
+function buildSubjectGradeQueue(subject: Subject, grade: number, now: number): QueueItem[] {
+  if (bank.index === null) return [];
+  const gradeIndex = filterBankForGrade(bank.index, subject, grade);
+  const generators =
+    subject === 'math' ? filterGeneratorsForGrade(ALL_GENERATORS, grade) : [];
+  const mastery = store.read('mastery');
+  return buildTodayQueue(mastery, gradeIndex, now, SUBJECT_SESSION_CONFIG, generators);
+}
 
 function goHome(): void {
   router.push({ name: 'home' });
 }
 
 /**
- * 开始冒险：由"今日冒险"机制驱动本学科会话（Req 13.2）。
- * - 今日该学科会话已完成 → 展示完成庆祝画面，不进入练习（Req 1.5 口径）；
- * - 今日该学科会话已存在且有未完成题 → 沿用并直接进入 /practice 续玩（Req 3.9 口径）；
- * - 否则生成新的学科会话写入 Local_Store 后进入 /practice；
- * - 队列无可用题 → 停留本页并提示（Req 1.7 口径）。
+ * 点击年级按钮：直接进入该学科该年级练习（Req 1.3，除年级外无其他前置选择）。
+ * 流程（Req 1.3、3.1、3.3、3.4、6.2）：
+ * a. schedule 写入 Last_Grade（1 秒内落盘）；
+ * b. 读取 session:subjects["{subject}:{grade}"] 组合会话；
+ * c. 今日该组合会话已完成 → 展示完成庆祝画面，不进入练习（Req 1.5 口径）；
+ * d. 今日该组合会话有未答题 → 导航 /practice?subject={s}&grade={g} 续练；
+ * e. 否则按学科+年级过滤后生成新会话，写入组合键（其余组合键逐值不变），再导航；
+ * f. 生成队列为空 → 提示"该年级暂无可用题目"并停留在 Grade_Selector（Req 3.4）。
  */
-function onStart(): void {
+function onSelectGrade(grade: number): void {
   const current = subjectId.value;
   if (current === null || bankFatal !== null) return;
-  emptyNotice.value = false;
+  emptyGradeNotice.value = false;
   writeWarning.value = false;
 
-  if (progress.value?.done) {
-    showCelebration.value = true;
-    return;
-  }
+  // a. 写入 Last_Grade（schedule 调度，1 秒内落盘，Req 6.2）；内存镜像同步更新标记
+  const updatedLastGrade: LastGrade = { ...lastGrade.value, [current]: grade };
+  lastGrade.value = updatedLastGrade;
+  store.schedule('lastGrade', updatedLastGrade);
 
   const now = Date.now();
-  const existing = store.read('session:today');
+  // b. 读取该学科该年级组合会话
+  const sessions = store.read('session:subjects');
+  const key = subjectGradeKey(current, grade);
+  const existing = sessions[key] ?? null;
+
   if (
     existing !== null &&
-    !shouldGenerateTodayQueue(existing, now) &&
     existing.queue.length > 0 &&
-    existing.queue.every((q) => q.subject === current)
+    !shouldGenerateTodayQueue(existing, now)
   ) {
-    // 沿用今日该学科会话续玩
-    router.push({ name: 'practice' });
+    if (nextUnanswered(existing) === null) {
+      // c. 今日已完成 → 完成庆祝画面
+      showCelebration.value = true;
+      return;
+    }
+    // d. 有未答题 → 沿用该组合会话续练
+    router.push({ name: 'practice', query: { subject: current, grade: String(grade) } });
     return;
   }
 
-  const queue = buildSubjectQueue(current, now);
+  // e. 生成新的学科年级会话并写入组合键
+  const queue = buildSubjectGradeQueue(current, grade, now);
   if (queue.length === 0) {
-    emptyNotice.value = true;
+    // f. 空队列 → 提示并停留（Req 3.4）
+    emptyGradeNotice.value = true;
     return;
   }
   const session = createTodaySession(queue, now);
   try {
-    store.write('session:today', session);
+    store.write(
+      'session:subjects',
+      saveSubjectSession(sessions, key, session) as Record<SubjectGradeKey, TodaySession>,
+    );
   } catch {
-    // Req 10.6：写失败提示"本次进度可能无法保存"，仍进入练习（由练习页按既有状态兜底）
+    // Req 6.8：写失败提示"本次进度可能无法保存"，仍进入练习（由练习页按既有状态兜底）
     writeWarning.value = true;
   }
-  router.push({ name: 'practice' });
+  router.push({ name: 'practice', query: { subject: current, grade: String(grade) } });
 }
 </script>
 
 <style scoped>
-/* ============ 通用卡通基底（Req 12.1 卡通风格、圆角造型） ============ */
+/* ============ 通用卡通基底（一期 Req 12.1 卡通风格、圆角造型，保留不变） ============ */
 
 .subject-page {
   min-height: 100vh;
@@ -406,7 +423,7 @@ function onStart(): void {
   margin: 0 auto;
 }
 
-/* 全部按钮触控区域 ≥ 44×44px（Req 12.2） */
+/* 全部按钮触控区域 ≥ 44×44px（一期 Req 12.2） */
 .nav-btn {
   min-width: 44px;
   min-height: 44px;
@@ -500,8 +517,8 @@ function onStart(): void {
   opacity: 0.95;
 }
 
-/* 今日进度卡片 */
-.progress-card {
+/* 年级选择卡片（Grade_Selector 容器） */
+.grade-card {
   width: 100%;
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.96);
@@ -517,7 +534,7 @@ function onStart(): void {
 }
 
 .card-title {
-  margin: 0 0 10px;
+  margin: 0 0 14px;
   font-size: 20px;
   font-weight: 900;
 }
@@ -528,73 +545,66 @@ function onStart(): void {
   font-weight: 700;
 }
 
-.card-text strong {
-  font-size: 22px;
-  color: #e2711d;
-}
-
-.progress-track {
-  height: 18px;
-  border-radius: 999px;
-  background: #eee6da;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #ffd166, #ff9f1c);
-  transition: width 0.4s ease;
-}
-
-.done-badge {
-  display: inline-block;
-  margin: 12px 0 0;
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: #d8f3dc;
-  color: #2d6a4f;
-  font-size: 16px;
-  font-weight: 900;
-}
-
 .error-card {
   background: #fff3f0;
   color: #9d3b2e;
 }
 
-/* 开始冒险大按钮（触控区域远大于 44×44px） */
-.start-btn {
-  min-width: 240px;
+/* 年级网格：语文/数学 6 个、英语 4 个年级按钮（Req 1.1、1.2） */
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/*
+ * 年级按钮（触控区域 ≥44×44px，Req 1.4）：
+ * 未标记按钮共享同一样式（Req 1.6：无 Last_Grade 时全部按钮一致）。
+ */
+.grade-btn {
+  min-width: 44px;
   min-height: 64px;
-  padding: 0 44px;
+  padding: 8px 4px;
   border: none;
-  border-radius: 999px;
-  font-size: 26px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff8ec, #ffeccb);
+  color: #5a4a42;
+  font-size: 20px;
   font-weight: 900;
   font-family: inherit;
-  letter-spacing: 2px;
-  color: #ffffff;
   cursor: pointer;
-  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18), 0 14px 28px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.start-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18), 0 6px 12px rgba(0, 0, 0, 0.18);
+.grade-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
 }
 
-.theme-chinese .start-btn {
-  background: linear-gradient(180deg, #ff5f6d, #c9184a);
+.grade-btn__label {
+  line-height: 1.2;
 }
 
-.theme-math .start-btn {
-  background: linear-gradient(180deg, #4361ee, #3a0ca3);
+/*
+ * Last_Grade 标记按钮：差异化配色 + "上次 ⭐"图标标记，与其余按钮可见区分
+ * （Req 1.5）；至多一个按钮携带该修饰（markedGrade 至多返回一个年级）。
+ */
+.grade-btn--marked {
+  background: linear-gradient(180deg, #ffd166, #ff9f1c);
+  color: #7a3e00;
+  box-shadow: 0 4px 0 rgba(180, 100, 0, 0.45);
 }
 
-.theme-english .start-btn {
-  background: linear-gradient(180deg, #06d6a0, #118ab2);
+.grade-btn__mark {
+  font-size: 12px;
+  font-weight: 800;
+  color: #a3540a;
 }
 
 .notice {

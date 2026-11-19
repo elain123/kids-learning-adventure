@@ -552,13 +552,12 @@ describe('端到端主链路：今日冒险 → 答题 → 结算 → 宝箱 →
     expect(firstKpRecord.mastered).toBe(false);
     expect(firstKpRecord.nextReviewAt).toBe(firstKpRecord.lastAnswerAt + INTERVALS_MS[1]);
     // 错题本恢复（Req 4.3/10.3）：首错再错题与重试答对题各一条
+    //（multi-grade-mistake-book 任务 5.1：wrongSet 升级为 v2 形状，不再存储
+    // retriedCorrect——已掌握改为按 mastery 派生；此处断言两题引用仍在集合中）
     expect(snapshot.wrongSet.items).toHaveLength(2);
-    const wrongRefs = snapshot.wrongSet.items.map((w) => ({
-      questionRef: w.questionRef,
-      retriedCorrect: w.retriedCorrect,
-    }));
-    expect(wrongRefs).toContainEqual({ questionRef: q2.id, retriedCorrect: false });
-    expect(wrongRefs).toContainEqual({ questionRef: q4.id, retriedCorrect: true });
+    const wrongRefs = snapshot.wrongSet.items.map((w) => w.questionRef);
+    expect(wrongRefs).toContain(q2.id);
+    expect(wrongRefs).toContain(q4.id);
     // 收藏恢复（Req 5.6/10.3）
     expect(snapshot.collection.items).toEqual(collectionItems);
     // 首页呈"今日冒险已完成"态，点击展示庆祝画面而不进入练习（Req 1.5）

@@ -10,9 +10,17 @@ describe('project scaffolding', () => {
     expect(1 + 1).toBe(2);
   });
 
-  it('router skeleton exposes the 5 routes', () => {
+  it('router skeleton exposes the 7 routes', () => {
     const paths = routes.map((r) => r.path);
-    expect(paths).toEqual(['/', '/subject/:id', '/practice', '/box', '/island']);
+    expect(paths).toEqual([
+      '/',
+      '/subject/:id',
+      '/practice',
+      '/box',
+      '/island',
+      '/island/wrong',
+      '/parent-settings',
+    ]);
   });
 
   it('App mounts with the router', async () => {

@@ -314,7 +314,9 @@ describe('断网冒烟与写失败提示', () => {
     expect(session().currentIndex).toBe(1);
     await flushScheduledWrites();
 
-    // ---------- 3. 第 2 题：首错 Hint → 再错解析 → 错题收集（retriedCorrect=false） ----------
+    // ---------- 3. 第 2 题：首错 Hint → 再错解析 → 错题收集 ----------
+    //（multi-grade-mistake-book 任务 5.1：wrongSet 升级为 v2 形状，不再存储
+    // retriedCorrect——已掌握改为按 mastery 派生；此处断言题目引用入账即可）
     const q2 = currentQuestion();
     await answerCurrent(false);
     expect(page().find('[data-testid="hint-bar"]').text(), '首错应展示 Hint').toContain(q2.hint);
@@ -331,9 +333,8 @@ describe('断网冒烟与写失败提示', () => {
     let storedWrongSet = readStorage<WrongSet>(WRONGSET_KEY);
     expect(storedWrongSet.items).toHaveLength(1);
     expect(storedWrongSet.items[0].questionRef).toBe(q2.id);
-    expect(storedWrongSet.items[0].retriedCorrect).toBe(false);
 
-    // ---------- 4. 第 3 题：首错 → 重试答对 → 按答错记账（错题收集 retriedCorrect=true） ----------
+    // ---------- 4. 第 3 题：首错 → 重试答对 → 按答错记账（错题收集） ----------
     const q3 = currentQuestion();
     await answerCurrent(false);
     await answerCurrent(true);
@@ -353,10 +354,7 @@ describe('断网冒烟与写失败提示', () => {
     expect(storedSession.results).toHaveLength(3);
     storedWrongSet = readStorage<WrongSet>(WRONGSET_KEY);
     expect(storedWrongSet.items).toHaveLength(2);
-    expect(storedWrongSet.items.map((i) => [i.questionRef, i.retriedCorrect])).toEqual([
-      [q2.id, false],
-      [q3.id, true],
-    ]);
+    expect(storedWrongSet.items.map((i) => i.questionRef)).toEqual([q2.id, q3.id]);
     const storedWallet = readStorage<StarWallet>(WALLET_KEY);
     expect(storedWallet.balance, '断网下星星应发放并落盘').toBe(5);
     const storedMastery = readStorage<Record<string, MasteryRecord>>(MASTERY_KEY);
